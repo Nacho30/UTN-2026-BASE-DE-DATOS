@@ -6,6 +6,7 @@ Scripts SQL del proyecto integrador Food Store sobre PostgreSQL 16.
 - `migraciones/NNN_*.sql`: cambios estructurales, numerados y en orden.
 - `pruebas/NNN_*.sql`: casos válidos e inválidos de cada migración.
 - `lab/`: scripts del laboratorio de concurrencia (TP2 Parte 2).
+- `optimizacion/`: carga masiva y consultas del laboratorio de optimización (TP3): `carga_masiva.sql`, `queries.sql`, `parte4_consultas.sql`.
 
 ## Reglas para el agente
 - Trabajar SOLO sobre la base `copia_trabajo` (ver `protocolo_seguridad.md`). Nunca sobre `plantilla_base`.
