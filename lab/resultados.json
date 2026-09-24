@@ -1,0 +1,1174 @@
+{
+ "e1_rc": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "A",
+   "cmd": "SET TRANSACTION ISOLATION LEVEL READ COMMITTED;",
+   "out": [
+    "SET"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "SELECT id_producto, nombre, precio FROM producto WHERE id_producto = 1;",
+   "out": [
+    " id_producto |       nombre        | precio  ",
+    "-------------+---------------------+---------",
+    "           1 | Hamburguesa clásica | 8500.00",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "B",
+   "cmd": "UPDATE producto SET precio = 9000 WHERE id_producto = 1;  -- autocommit",
+   "out": [
+    "UPDATE 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "A",
+   "cmd": "SELECT id_producto, nombre, precio FROM producto WHERE id_producto = 1;",
+   "out": [
+    " id_producto |       nombre        | precio  ",
+    "-------------+---------------------+---------",
+    "           1 | Hamburguesa clásica | 9000.00",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "A",
+   "cmd": "SELECT id_producto, nombre, precio FROM producto WHERE id_producto = 1;",
+   "out": [
+    " id_producto |       nombre        | precio  ",
+    "-------------+---------------------+---------",
+    "           1 | Hamburguesa clásica | 9000.00",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e1_rr": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "A",
+   "cmd": "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;",
+   "out": [
+    "SET"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "SELECT id_producto, nombre, precio FROM producto WHERE id_producto = 1;",
+   "out": [
+    " id_producto |       nombre        | precio  ",
+    "-------------+---------------------+---------",
+    "           1 | Hamburguesa clásica | 8500.00",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "B",
+   "cmd": "UPDATE producto SET precio = 9000 WHERE id_producto = 1;  -- autocommit",
+   "out": [
+    "UPDATE 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "A",
+   "cmd": "SELECT id_producto, nombre, precio FROM producto WHERE id_producto = 1;",
+   "out": [
+    " id_producto |       nombre        | precio  ",
+    "-------------+---------------------+---------",
+    "           1 | Hamburguesa clásica | 8500.00",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "A",
+   "cmd": "SELECT id_producto, nombre, precio FROM producto WHERE id_producto = 1;",
+   "out": [
+    " id_producto |       nombre        | precio  ",
+    "-------------+---------------------+---------",
+    "           1 | Hamburguesa clásica | 9000.00",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e2_rc": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "A",
+   "cmd": "SET TRANSACTION ISOLATION LEVEL READ COMMITTED;",
+   "out": [
+    "SET"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "SELECT count(*) AS lineas, sum(cantidad) AS unidades FROM pedido_producto WHERE id_producto = 4;",
+   "out": [
+    " lineas | unidades ",
+    "--------+----------",
+    "      1 |        2",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "B",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (2, 4, 3, 2500);  -- autocommit",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "A",
+   "cmd": "SELECT count(*) AS lineas, sum(cantidad) AS unidades FROM pedido_producto WHERE id_producto = 4;",
+   "out": [
+    " lineas | unidades ",
+    "--------+----------",
+    "      2 |        5",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "A",
+   "cmd": "SELECT count(*) AS lineas, sum(cantidad) AS unidades FROM pedido_producto WHERE id_producto = 4;",
+   "out": [
+    " lineas | unidades ",
+    "--------+----------",
+    "      2 |        5",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e2_rr": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "A",
+   "cmd": "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;",
+   "out": [
+    "SET"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "SELECT count(*) AS lineas, sum(cantidad) AS unidades FROM pedido_producto WHERE id_producto = 4;",
+   "out": [
+    " lineas | unidades ",
+    "--------+----------",
+    "      1 |        2",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "B",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (2, 4, 3, 2500);  -- autocommit",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "A",
+   "cmd": "SELECT count(*) AS lineas, sum(cantidad) AS unidades FROM pedido_producto WHERE id_producto = 4;",
+   "out": [
+    " lineas | unidades ",
+    "--------+----------",
+    "      1 |        2",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "A",
+   "cmd": "SELECT count(*) AS lineas, sum(cantidad) AS unidades FROM pedido_producto WHERE id_producto = 4;",
+   "out": [
+    " lineas | unidades ",
+    "--------+----------",
+    "      2 |        5",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e2_ser": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "A",
+   "cmd": "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;",
+   "out": [
+    "SET"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "SELECT count(*) AS lineas, sum(cantidad) AS unidades FROM pedido_producto WHERE id_producto = 4;",
+   "out": [
+    " lineas | unidades ",
+    "--------+----------",
+    "      1 |        2",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "B",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (2, 4, 3, 2500);  -- autocommit",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "A",
+   "cmd": "SELECT count(*) AS lineas, sum(cantidad) AS unidades FROM pedido_producto WHERE id_producto = 4;",
+   "out": [
+    " lineas | unidades ",
+    "--------+----------",
+    "      1 |        2",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "A",
+   "cmd": "SELECT count(*) AS lineas, sum(cantidad) AS unidades FROM pedido_producto WHERE id_producto = 4;",
+   "out": [
+    " lineas | unidades ",
+    "--------+----------",
+    "      2 |        5",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e3_rc": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "SELECT pg_backend_pid();",
+   "out": [
+    " pg_backend_pid ",
+    "----------------",
+    "            592",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "B",
+   "cmd": "SELECT pg_backend_pid();",
+   "out": [
+    " pg_backend_pid ",
+    "----------------",
+    "            595",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "A",
+   "cmd": "SELECT id_producto, nombre, stock FROM producto WHERE id_producto = 2 FOR UPDATE;",
+   "out": [
+    " id_producto |      nombre       | stock ",
+    "-------------+-------------------+-------",
+    "           2 | Hamburguesa doble |    10",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "B",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "B",
+   "cmd": "SELECT id_producto, nombre, stock FROM producto WHERE id_producto = 2 FOR UPDATE;",
+   "out": [
+    "-- (la sesión queda BLOQUEADA, sin devolver resultado)"
+   ],
+   "done": false,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "C",
+   "cmd": "SELECT pid, pg_blocking_pids(pid) AS bloqueado_por, wait_event_type, wait_event, state FROM pg_stat_activity WHERE datname = 'copia_trabajo' AND pid <> pg_backend_pid() ORDER BY pid;",
+   "out": [
+    " pid | bloqueado_por | wait_event_type |  wait_event   |        state        ",
+    "-----+---------------+-----------------+---------------+---------------------",
+    " 592 | {}            | Client          | ClientRead    | idle in transaction",
+    " 595 | {592}         | Lock            | transactionid | active",
+    "(2 rows)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 8,
+   "s": "A",
+   "cmd": "UPDATE producto SET stock = stock - 1 WHERE id_producto = 2;",
+   "out": [
+    "UPDATE 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 9,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 10,
+   "s": "B",
+   "cmd": null,
+   "resumed_from": 6,
+   "out": [
+    " id_producto |      nombre       | stock ",
+    "-------------+-------------------+-------",
+    "           2 | Hamburguesa doble |     9",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 11,
+   "s": "B",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e3_rr": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "SELECT pg_backend_pid();",
+   "out": [
+    " pg_backend_pid ",
+    "----------------",
+    "            603",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "B",
+   "cmd": "SELECT pg_backend_pid();",
+   "out": [
+    " pg_backend_pid ",
+    "----------------",
+    "            606",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "A",
+   "cmd": "SELECT id_producto, nombre, stock FROM producto WHERE id_producto = 2 FOR UPDATE;",
+   "out": [
+    " id_producto |      nombre       | stock ",
+    "-------------+-------------------+-------",
+    "           2 | Hamburguesa doble |    10",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "B",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "B",
+   "cmd": "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;",
+   "out": [
+    "SET"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "B",
+   "cmd": "SELECT id_producto, stock FROM producto WHERE id_producto = 1;  -- toma el snapshot de la transacción",
+   "out": [
+    " id_producto | stock ",
+    "-------------+-------",
+    "           1 |    20",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 8,
+   "s": "B",
+   "cmd": "SELECT id_producto, nombre, stock FROM producto WHERE id_producto = 2 FOR UPDATE;",
+   "out": [
+    "-- (la sesión queda BLOQUEADA, sin devolver resultado)"
+   ],
+   "done": false,
+   "note": null
+  },
+  {
+   "t": 9,
+   "s": "C",
+   "cmd": "SELECT pid, pg_blocking_pids(pid) AS bloqueado_por, wait_event_type, wait_event, state FROM pg_stat_activity WHERE datname = 'copia_trabajo' AND pid <> pg_backend_pid() ORDER BY pid;",
+   "out": [
+    " pid | bloqueado_por | wait_event_type |  wait_event   |        state        ",
+    "-----+---------------+-----------------+---------------+---------------------",
+    " 603 | {}            | Client          | ClientRead    | idle in transaction",
+    " 606 | {603}         | Lock            | transactionid | active",
+    "(2 rows)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 10,
+   "s": "A",
+   "cmd": "UPDATE producto SET stock = stock - 1 WHERE id_producto = 2;",
+   "out": [
+    "UPDATE 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 11,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 12,
+   "s": "B",
+   "cmd": null,
+   "resumed_from": 8,
+   "out": [
+    "ERROR:  could not serialize access due to concurrent update"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 13,
+   "s": "B",
+   "cmd": "\\echo :LAST_ERROR_SQLSTATE",
+   "out": [
+    "40001"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 14,
+   "s": "B",
+   "cmd": "ROLLBACK;",
+   "out": [
+    "ROLLBACK"
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e3_nowait": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "SELECT pg_backend_pid();",
+   "out": [
+    " pg_backend_pid ",
+    "----------------",
+    "            614",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "B",
+   "cmd": "SELECT pg_backend_pid();",
+   "out": [
+    " pg_backend_pid ",
+    "----------------",
+    "            617",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "A",
+   "cmd": "SELECT id_producto, nombre, stock FROM producto WHERE id_producto = 2 FOR UPDATE;",
+   "out": [
+    " id_producto |      nombre       | stock ",
+    "-------------+-------------------+-------",
+    "           2 | Hamburguesa doble |    10",
+    "(1 row)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "B",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "B",
+   "cmd": "SELECT id_producto, nombre, stock FROM producto WHERE id_producto = 2 FOR UPDATE NOWAIT;",
+   "out": [
+    "ERROR:  could not obtain lock on row in relation \"producto\""
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "B",
+   "cmd": "\\echo :LAST_ERROR_SQLSTATE",
+   "out": [
+    "55P03"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 8,
+   "s": "B",
+   "cmd": "ROLLBACK;",
+   "out": [
+    "ROLLBACK"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 9,
+   "s": "A",
+   "cmd": "ROLLBACK;",
+   "out": [
+    "ROLLBACK"
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e4_rc": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "B",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (2, 1, 1, 8500);",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "B",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (4, 2, 1, 11000);",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "A",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (2, 2, 1, 11000);",
+   "out": [
+    "-- (la sesión queda BLOQUEADA, sin devolver resultado)"
+   ],
+   "done": false,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "B",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (4, 1, 1, 8500);",
+   "out": [
+    "ERROR:  deadlock detected",
+    "DETAIL:  Process 625 waits for ShareLock on transaction 940; blocked by process 622.",
+    "Process 622 waits for ShareLock on transaction 941; blocked by process 625.",
+    "HINT:  See server log for query details.",
+    "CONTEXT:  while locking tuple (0,24) in relation \"producto\"",
+    "SQL statement \"SELECT activo, stock                            FROM producto",
+    "    WHERE id_producto = NEW.id_producto",
+    "    FOR UPDATE\"",
+    "PL/pgSQL function fn_pedido_producto_valida_y_descuenta_stock() line 6 at SQL statement"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "A",
+   "cmd": null,
+   "resumed_from": 5,
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 8,
+   "s": "B",
+   "cmd": "\\echo :LAST_ERROR_SQLSTATE",
+   "out": [
+    "40P01"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 9,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 10,
+   "s": "B",
+   "cmd": "COMMIT;",
+   "out": [
+    "ROLLBACK"
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e4_ser": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "B",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;",
+   "out": [
+    "SET"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "B",
+   "cmd": "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;",
+   "out": [
+    "SET"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "A",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (2, 1, 1, 8500);",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "B",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (4, 2, 1, 11000);",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "A",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (2, 2, 1, 11000);",
+   "out": [
+    "-- (la sesión queda BLOQUEADA, sin devolver resultado)"
+   ],
+   "done": false,
+   "note": null
+  },
+  {
+   "t": 8,
+   "s": "B",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (4, 1, 1, 8500);",
+   "out": [
+    "ERROR:  deadlock detected",
+    "DETAIL:  Process 634 waits for ShareLock on transaction 945; blocked by process 631.",
+    "Process 631 waits for ShareLock on transaction 946; blocked by process 634.",
+    "HINT:  See server log for query details.",
+    "CONTEXT:  while locking tuple (0,35) in relation \"producto\"",
+    "SQL statement \"SELECT activo, stock                            FROM producto",
+    "    WHERE id_producto = NEW.id_producto",
+    "    FOR UPDATE\"",
+    "PL/pgSQL function fn_pedido_producto_valida_y_descuenta_stock() line 6 at SQL statement"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 9,
+   "s": "A",
+   "cmd": null,
+   "resumed_from": 7,
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 10,
+   "s": "B",
+   "cmd": "\\echo :LAST_ERROR_SQLSTATE",
+   "out": [
+    "40P01"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 11,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 12,
+   "s": "B",
+   "cmd": "COMMIT;",
+   "out": [
+    "ROLLBACK"
+   ],
+   "done": true,
+   "note": null
+  }
+ ],
+ "e4_orden": [
+  {
+   "t": 1,
+   "s": "A",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 2,
+   "s": "B",
+   "cmd": "BEGIN;",
+   "out": [
+    "BEGIN"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 3,
+   "s": "A",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (2, 1, 1, 8500);",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 4,
+   "s": "B",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (4, 1, 1, 8500);",
+   "out": [
+    "-- (la sesión queda BLOQUEADA, sin devolver resultado)"
+   ],
+   "done": false,
+   "note": null
+  },
+  {
+   "t": 5,
+   "s": "A",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (2, 2, 1, 11000);",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 6,
+   "s": "A",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 7,
+   "s": "B",
+   "cmd": null,
+   "resumed_from": 4,
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 8,
+   "s": "B",
+   "cmd": "INSERT INTO pedido_producto (id_pedido, id_producto, cantidad, precio_unitario) VALUES (4, 2, 1, 11000);",
+   "out": [
+    "INSERT 0 1"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 9,
+   "s": "B",
+   "cmd": "COMMIT;",
+   "out": [
+    "COMMIT"
+   ],
+   "done": true,
+   "note": null
+  },
+  {
+   "t": 10,
+   "s": "B",
+   "cmd": "SELECT id_producto, stock FROM producto WHERE id_producto IN (1, 2) ORDER BY id_producto;",
+   "out": [
+    " id_producto | stock ",
+    "-------------+-------",
+    "           1 |    18",
+    "           2 |     8",
+    "(2 rows)",
+    ""
+   ],
+   "done": true,
+   "note": null
+  }
+ ]
+}
