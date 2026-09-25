@@ -6,6 +6,11 @@ Scripts SQL del proyecto integrador Food Store sobre PostgreSQL 16.
 - `migraciones/NNN_*.sql`: cambios estructurales, numerados y en orden.
 - `pruebas/NNN_*.sql`: casos válidos e inválidos de cada migración.
 - `lab/`: scripts del laboratorio de concurrencia (TP2 Parte 2).
+- `optimizacion/`: carga masiva y consultas del laboratorio de optimización (TP3): `carga_masiva.sql`, `queries.sql`, `parte4_consultas.sql`.
+- `analitica/`: consultas analíticas con joins, subconsultas, agregación y ventana del TP4: `queries_tp4.sql`, `parte2_qc.sql`, `parte3_ranking.sql`, `parte4_competencia.sql`.
+- `indices.sql`, `views.sql`, `specs/`, `duia.md`, `informe_mediciones.md`, `README_U3S1.md`: entrega de Unidad 3 / Semana 1 (índices, vistas y vista materializada sobre el esquema heredado, sin modificar tablas ni restricciones).
+- `programables/`: funciones y procedimientos PL/pgSQL del TPI (`funciones_procedimientos.sql`, `pruebas_funciones_procedimientos.sql`) — requieren los triggers de `migraciones/001_restricciones_reglas_negocio.sql` ya aplicados.
+- `informe_tecnico_TPI.md`: informe técnico consolidado de la primera entrega parcial del TPI (mapea los 9 objetivos de la consigna contra la evidencia de cada unidad).
 
 ## Reglas para el agente
 - Trabajar SOLO sobre la base `copia_trabajo` (ver `protocolo_seguridad.md`). Nunca sobre `plantilla_base`.
