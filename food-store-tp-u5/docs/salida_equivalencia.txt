@@ -1,0 +1,250 @@
+===== Consulta 1 — sobre usuario_anon (la que se le especifica a la IA) =====
+SET
+    rol     | mes_alta | usuarios 
+------------+----------+----------
+ ADMIN      | 2024-10  |        1
+ ADMIN      | 2024-11  |        1
+ ADMIN      | 2025-01  |        1
+ ADMIN      | 2025-02  |        1
+ ADMIN      | 2025-03  |        1
+ ADMIN      | 2025-04  |        1
+ ADMIN      | 2025-06  |        1
+ ADMIN      | 2025-07  |        1
+ ADMIN      | 2025-08  |        1
+ ADMIN      | 2025-09  |        1
+ ADMIN      | 2025-10  |        1
+ ADMIN      | 2025-11  |        1
+ ADMIN      | 2025-12  |        1
+ ADMIN      | 2026-02  |        1
+ ADMIN      | 2026-03  |        1
+ ADMIN      | 2026-04  |        1
+ ADMIN      | 2026-05  |        1
+ ADMIN      | 2026-07  |        1
+ ADMIN      | 2026-08  |        1
+ ADMIN      | 2026-09  |        1
+ CLIENTE    | 2024-10  |       37
+ CLIENTE    | 2024-11  |       34
+ CLIENTE    | 2024-12  |       38
+ CLIENTE    | 2025-01  |       35
+ CLIENTE    | 2025-02  |       33
+ CLIENTE    | 2025-03  |       36
+ CLIENTE    | 2025-04  |       37
+ CLIENTE    | 2025-05  |       35
+ CLIENTE    | 2025-06  |       36
+ CLIENTE    | 2025-07  |       37
+ CLIENTE    | 2025-08  |       36
+ CLIENTE    | 2025-09  |       34
+ CLIENTE    | 2025-10  |       39
+ CLIENTE    | 2025-11  |       34
+ CLIENTE    | 2025-12  |       36
+ CLIENTE    | 2026-01  |       36
+ CLIENTE    | 2026-02  |       33
+ CLIENTE    | 2026-03  |       37
+ CLIENTE    | 2026-04  |       31
+ CLIENTE    | 2026-05  |       39
+ CLIENTE    | 2026-06  |       36
+ CLIENTE    | 2026-07  |       34
+ CLIENTE    | 2026-08  |       36
+ CLIENTE    | 2026-09  |       37
+ CLIENTE    | 2026-10  |       21
+ LOGISTICA  | 2025-01  |        1
+ LOGISTICA  | 2026-04  |        1
+ LOGISTICA  | 2026-07  |        1
+ LOGISTICA  | 2026-10  |        1
+ REPARTIDOR | 2024-10  |        3
+ REPARTIDOR | 2024-11  |        5
+ REPARTIDOR | 2024-12  |        3
+ REPARTIDOR | 2025-01  |        5
+ REPARTIDOR | 2025-02  |        3
+ REPARTIDOR | 2025-03  |        5
+ REPARTIDOR | 2025-04  |        3
+ REPARTIDOR | 2025-05  |        5
+ REPARTIDOR | 2025-06  |        4
+ REPARTIDOR | 2025-07  |        5
+ REPARTIDOR | 2025-08  |        3
+ REPARTIDOR | 2025-09  |        5
+ REPARTIDOR | 2025-10  |        3
+ REPARTIDOR | 2025-11  |        4
+ REPARTIDOR | 2025-12  |        5
+ REPARTIDOR | 2026-01  |        5
+ REPARTIDOR | 2026-02  |        3
+ REPARTIDOR | 2026-03  |        4
+ REPARTIDOR | 2026-04  |        5
+ REPARTIDOR | 2026-05  |        2
+ REPARTIDOR | 2026-06  |        5
+ REPARTIDOR | 2026-07  |        4
+ REPARTIDOR | 2026-08  |        4
+ REPARTIDOR | 2026-09  |        3
+ REPARTIDOR | 2026-10  |        3
+(74 rows)
+
+RESET
+===== Consulta 2 — equivalente sobre usuario (tabla real) =====
+    rol     | mes_alta | usuarios 
+------------+----------+----------
+ ADMIN      | 2024-10  |        1
+ ADMIN      | 2024-11  |        1
+ ADMIN      | 2025-01  |        1
+ ADMIN      | 2025-02  |        1
+ ADMIN      | 2025-03  |        1
+ ADMIN      | 2025-04  |        1
+ ADMIN      | 2025-06  |        1
+ ADMIN      | 2025-07  |        1
+ ADMIN      | 2025-08  |        1
+ ADMIN      | 2025-09  |        1
+ ADMIN      | 2025-10  |        1
+ ADMIN      | 2025-11  |        1
+ ADMIN      | 2025-12  |        1
+ ADMIN      | 2026-02  |        1
+ ADMIN      | 2026-03  |        1
+ ADMIN      | 2026-04  |        1
+ ADMIN      | 2026-05  |        1
+ ADMIN      | 2026-07  |        1
+ ADMIN      | 2026-08  |        1
+ ADMIN      | 2026-09  |        1
+ CLIENTE    | 2024-10  |       37
+ CLIENTE    | 2024-11  |       34
+ CLIENTE    | 2024-12  |       38
+ CLIENTE    | 2025-01  |       35
+ CLIENTE    | 2025-02  |       33
+ CLIENTE    | 2025-03  |       36
+ CLIENTE    | 2025-04  |       37
+ CLIENTE    | 2025-05  |       35
+ CLIENTE    | 2025-06  |       36
+ CLIENTE    | 2025-07  |       37
+ CLIENTE    | 2025-08  |       36
+ CLIENTE    | 2025-09  |       34
+ CLIENTE    | 2025-10  |       39
+ CLIENTE    | 2025-11  |       34
+ CLIENTE    | 2025-12  |       36
+ CLIENTE    | 2026-01  |       36
+ CLIENTE    | 2026-02  |       33
+ CLIENTE    | 2026-03  |       37
+ CLIENTE    | 2026-04  |       31
+ CLIENTE    | 2026-05  |       39
+ CLIENTE    | 2026-06  |       36
+ CLIENTE    | 2026-07  |       34
+ CLIENTE    | 2026-08  |       36
+ CLIENTE    | 2026-09  |       37
+ CLIENTE    | 2026-10  |       21
+ LOGISTICA  | 2025-01  |        1
+ LOGISTICA  | 2026-04  |        1
+ LOGISTICA  | 2026-07  |        1
+ LOGISTICA  | 2026-10  |        1
+ REPARTIDOR | 2024-10  |        3
+ REPARTIDOR | 2024-11  |        5
+ REPARTIDOR | 2024-12  |        3
+ REPARTIDOR | 2025-01  |        5
+ REPARTIDOR | 2025-02  |        3
+ REPARTIDOR | 2025-03  |        5
+ REPARTIDOR | 2025-04  |        3
+ REPARTIDOR | 2025-05  |        5
+ REPARTIDOR | 2025-06  |        4
+ REPARTIDOR | 2025-07  |        5
+ REPARTIDOR | 2025-08  |        3
+ REPARTIDOR | 2025-09  |        5
+ REPARTIDOR | 2025-10  |        3
+ REPARTIDOR | 2025-11  |        4
+ REPARTIDOR | 2025-12  |        5
+ REPARTIDOR | 2026-01  |        5
+ REPARTIDOR | 2026-02  |        3
+ REPARTIDOR | 2026-03  |        4
+ REPARTIDOR | 2026-04  |        5
+ REPARTIDOR | 2026-05  |        2
+ REPARTIDOR | 2026-06  |        5
+ REPARTIDOR | 2026-07  |        4
+ REPARTIDOR | 2026-08  |        4
+ REPARTIDOR | 2026-09  |        3
+ REPARTIDOR | 2026-10  |        3
+(74 rows)
+
+===== Lado a lado (FULL OUTER JOIN): diferencia esperada 0 en todas las filas =====
+    rol     |   mes   | usuarios_anon | usuarios_real | diferencia 
+------------+---------+---------------+---------------+------------
+ ADMIN      | 2024-10 |             1 |             1 |          0
+ ADMIN      | 2024-11 |             1 |             1 |          0
+ ADMIN      | 2025-01 |             1 |             1 |          0
+ ADMIN      | 2025-02 |             1 |             1 |          0
+ ADMIN      | 2025-03 |             1 |             1 |          0
+ ADMIN      | 2025-04 |             1 |             1 |          0
+ ADMIN      | 2025-06 |             1 |             1 |          0
+ ADMIN      | 2025-07 |             1 |             1 |          0
+ ADMIN      | 2025-08 |             1 |             1 |          0
+ ADMIN      | 2025-09 |             1 |             1 |          0
+ ADMIN      | 2025-10 |             1 |             1 |          0
+ ADMIN      | 2025-11 |             1 |             1 |          0
+ ADMIN      | 2025-12 |             1 |             1 |          0
+ ADMIN      | 2026-02 |             1 |             1 |          0
+ ADMIN      | 2026-03 |             1 |             1 |          0
+ ADMIN      | 2026-04 |             1 |             1 |          0
+ ADMIN      | 2026-05 |             1 |             1 |          0
+ ADMIN      | 2026-07 |             1 |             1 |          0
+ ADMIN      | 2026-08 |             1 |             1 |          0
+ ADMIN      | 2026-09 |             1 |             1 |          0
+ CLIENTE    | 2024-10 |            37 |            37 |          0
+ CLIENTE    | 2024-11 |            34 |            34 |          0
+ CLIENTE    | 2024-12 |            38 |            38 |          0
+ CLIENTE    | 2025-01 |            35 |            35 |          0
+ CLIENTE    | 2025-02 |            33 |            33 |          0
+ CLIENTE    | 2025-03 |            36 |            36 |          0
+ CLIENTE    | 2025-04 |            37 |            37 |          0
+ CLIENTE    | 2025-05 |            35 |            35 |          0
+ CLIENTE    | 2025-06 |            36 |            36 |          0
+ CLIENTE    | 2025-07 |            37 |            37 |          0
+ CLIENTE    | 2025-08 |            36 |            36 |          0
+ CLIENTE    | 2025-09 |            34 |            34 |          0
+ CLIENTE    | 2025-10 |            39 |            39 |          0
+ CLIENTE    | 2025-11 |            34 |            34 |          0
+ CLIENTE    | 2025-12 |            36 |            36 |          0
+ CLIENTE    | 2026-01 |            36 |            36 |          0
+ CLIENTE    | 2026-02 |            33 |            33 |          0
+ CLIENTE    | 2026-03 |            37 |            37 |          0
+ CLIENTE    | 2026-04 |            31 |            31 |          0
+ CLIENTE    | 2026-05 |            39 |            39 |          0
+ CLIENTE    | 2026-06 |            36 |            36 |          0
+ CLIENTE    | 2026-07 |            34 |            34 |          0
+ CLIENTE    | 2026-08 |            36 |            36 |          0
+ CLIENTE    | 2026-09 |            37 |            37 |          0
+ CLIENTE    | 2026-10 |            21 |            21 |          0
+ LOGISTICA  | 2025-01 |             1 |             1 |          0
+ LOGISTICA  | 2026-04 |             1 |             1 |          0
+ LOGISTICA  | 2026-07 |             1 |             1 |          0
+ LOGISTICA  | 2026-10 |             1 |             1 |          0
+ REPARTIDOR | 2024-10 |             3 |             3 |          0
+ REPARTIDOR | 2024-11 |             5 |             5 |          0
+ REPARTIDOR | 2024-12 |             3 |             3 |          0
+ REPARTIDOR | 2025-01 |             5 |             5 |          0
+ REPARTIDOR | 2025-02 |             3 |             3 |          0
+ REPARTIDOR | 2025-03 |             5 |             5 |          0
+ REPARTIDOR | 2025-04 |             3 |             3 |          0
+ REPARTIDOR | 2025-05 |             5 |             5 |          0
+ REPARTIDOR | 2025-06 |             4 |             4 |          0
+ REPARTIDOR | 2025-07 |             5 |             5 |          0
+ REPARTIDOR | 2025-08 |             3 |             3 |          0
+ REPARTIDOR | 2025-09 |             5 |             5 |          0
+ REPARTIDOR | 2025-10 |             3 |             3 |          0
+ REPARTIDOR | 2025-11 |             4 |             4 |          0
+ REPARTIDOR | 2025-12 |             5 |             5 |          0
+ REPARTIDOR | 2026-01 |             5 |             5 |          0
+ REPARTIDOR | 2026-02 |             3 |             3 |          0
+ REPARTIDOR | 2026-03 |             4 |             4 |          0
+ REPARTIDOR | 2026-04 |             5 |             5 |          0
+ REPARTIDOR | 2026-05 |             2 |             2 |          0
+ REPARTIDOR | 2026-06 |             5 |             5 |          0
+ REPARTIDOR | 2026-07 |             4 |             4 |          0
+ REPARTIDOR | 2026-08 |             4 |             4 |          0
+ REPARTIDOR | 2026-09 |             3 |             3 |          0
+ REPARTIDOR | 2026-10 |             3 |             3 |          0
+(74 rows)
+
+===== Diferencias (anon EXCEPT real) ∪ (real EXCEPT anon) — esperado: 0 filas =====
+ rol | to_char | count 
+-----+---------+-------
+(0 rows)
+
+===== Totales de control =====
+ total_anon | total_real | grupos_anon | grupos_real 
+------------+------------+-------------+-------------
+       1000 |       1000 |          74 |          74
+(1 row)
+
