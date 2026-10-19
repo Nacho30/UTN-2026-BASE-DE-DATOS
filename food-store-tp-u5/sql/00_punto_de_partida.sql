@@ -85,6 +85,10 @@ CREATE TABLE IF NOT EXISTS auditoria_password (
 --    SECURITY DEFINER: quien la ejecuta NO necesita leer password_hash.
 --    search_path fijo para evitar secuestro de objetos (Clase 2).
 --    Bloquea la cuenta al 5.º intento fallido consecutivo.
+--    El log del servidor recibe sólo usuario_id (nunca el email): la
+--    Parte B mostró que el log es un activo sensible. Además, quien la
+--    invoque debe usar parámetros enlazados ($1, $2): con SQL literal, la
+--    línea STATEMENT que acompaña al RAISE LOG copia la contraseña al log.
 -- ---------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_autenticar(p_email TEXT, p_password TEXT)
 RETURNS BIGINT
@@ -105,7 +109,7 @@ BEGIN
     IF v_id IS NULL THEN
         INSERT INTO auditoria_login (email_intentado, exito, motivo)
         VALUES (p_email, FALSE, 'usuario_inexistente');
-        RAISE LOG 'fn_autenticar: FALLO motivo=usuario_inexistente email=%', p_email;
+        RAISE LOG 'fn_autenticar: FALLO motivo=usuario_inexistente email_hash=%', left(md5(lower(p_email)), 12);
         RETURN NULL;
     END IF;
 
@@ -120,7 +124,7 @@ BEGIN
         UPDATE usuario SET intentos_fallidos = 0 WHERE id = v_id;
         INSERT INTO auditoria_login (email_intentado, usuario_id, exito, motivo)
         VALUES (p_email, v_id, TRUE, 'ok');
-        RAISE LOG 'fn_autenticar: EXITO usuario_id=% email=%', v_id, p_email;
+        RAISE LOG 'fn_autenticar: EXITO usuario_id=%', v_id;
         RETURN v_id;
     END IF;
 
@@ -130,7 +134,8 @@ BEGIN
      WHERE id = v_id;
     INSERT INTO auditoria_login (email_intentado, usuario_id, exito, motivo)
     VALUES (p_email, v_id, FALSE, 'password_incorrecta');
-    RAISE LOG 'fn_autenticar: FALLO motivo=password_incorrecta usuario_id=% email=%', v_id, p_email;
+    RAISE LOG 'fn_autenticar: FALLO motivo=password_incorrecta usuario_id=% intentos=%', v_id,
+              (SELECT intentos_fallidos FROM usuario WHERE id = v_id);
     RETURN NULL;
 END;
 $$;
