@@ -16,13 +16,13 @@
  soporte_mesa      | 5 connections
 
 ===== Membresías (pg_auth_members) =====
-     rol_grupo     |   miembro    | admin_option | inherit_option 
--------------------+--------------+--------------+----------------
- rol_app_escritura | app_web      | f            | t
- rol_app_lectura   | app_web      | f            | t
- rol_auditor       | auditor_seg  | f            | t
- rol_reportes      | reportes_bi  | f            | t
- rol_soporte       | soporte_mesa | f            | t
+     rol_grupo     |   miembro    | admin_option | inherit_option | set_option 
+-------------------+--------------+--------------+----------------+------------
+ rol_app_escritura | app_web      | f            | t              | f
+ rol_app_lectura   | app_web      | f            | t              | f
+ rol_auditor       | auditor_seg  | f            | t              | f
+ rol_reportes      | reportes_bi  | f            | t              | f
+ rol_soporte       | soporte_mesa | f            | t              | f
 (5 rows)
 
 ===== Privilegios de TABLA por rol (information_schema.role_table_grants) =====
@@ -39,10 +39,10 @@
  admin_datos       | pedido                             | DELETE, INSERT, SELECT, UPDATE
  admin_datos       | producto                           | DELETE, INSERT, SELECT, UPDATE
  admin_datos       | responsable_deposito               | DELETE, INSERT, SELECT, UPDATE
- admin_datos       | usuario                            | DELETE, INSERT, SELECT, UPDATE
+ admin_datos       | usuario_anon                       | DELETE, INSERT, SELECT, UPDATE
  admin_datos       | v_auditoria_venta_diaria_categoria | DELETE, INSERT, SELECT, UPDATE
  admin_datos       | v_control_lote_almacen             | DELETE, INSERT, SELECT, UPDATE
- admin_datos       | venta_diaria_categoria             | DELETE, INSERT, SELECT, UPDATE
+ admin_datos       | venta_diaria_categoria             | SELECT
  rol_app_escritura | detalle_pedido                     | INSERT
  rol_app_escritura | pedido                             | INSERT
  rol_app_lectura   | categoria                          | SELECT
@@ -55,18 +55,21 @@
  rol_reportes      | detalle_pedido                     | SELECT
  rol_reportes      | pedido                             | SELECT
  rol_reportes      | producto                           | SELECT
+ rol_reportes      | usuario_anon                       | SELECT
  rol_reportes      | venta_diaria_categoria             | SELECT
  rol_soporte       | detalle_pedido                     | SELECT
  rol_soporte       | pedido                             | SELECT
-(30 rows)
+(31 rows)
 
 ===== Privilegios de COLUMNA sobre usuario (information_schema.column_privileges) =====
-     grantee     | privilege_type |                                  columnas                                  
------------------+----------------+----------------------------------------------------------------------------
+     grantee     | privilege_type |                                             columnas                                             
+-----------------+----------------+--------------------------------------------------------------------------------------------------
+ admin_datos     | SELECT         | bloqueado, direccion, eliminado, email, fecha_alta, id, intentos_fallidos, nombre, rol, telefono
+ admin_datos     | UPDATE         | direccion, eliminado, email, nombre, telefono
  rol_app_lectura | SELECT         | direccion, email, id, nombre, rol, telefono
  rol_soporte     | SELECT         | bloqueado, email, fecha_alta, id, intentos_fallidos, nombre, rol, telefono
- rol_soporte     | UPDATE         | bloqueado
-(3 rows)
+ rol_soporte     | UPDATE         | bloqueado, intentos_fallidos
+(5 rows)
 
 ===== EXECUTE sobre funciones de credenciales =====
      routine_name     |      grantee      
@@ -78,8 +81,8 @@
 (4 rows)
 
 CREATE TABLE
-INSERT 0 69
-INSERT 0 0
+INSERT 0 66
+INSERT 0 1
 CREATE VIEW
 ===== SOBRAN (otorgados y no previstos en la spec) — esperado: 0 filas =====
  grantee | table_name | privilege_type 
@@ -98,4 +101,14 @@ CREATE VIEW
  foodstore_owner | public  | secuencias | {admin_datos=rwU/foodstore_owner}
  foodstore_owner | public  | tablas     | {admin_datos=arwd/foodstore_owner}
 (3 rows)
+
+===== Columnas de usuario con privilegio de columna — esperado exacto (0 filas de diferencia) =====
+ dif | grantee | privilege_type | column_name 
+-----+---------+----------------+-------------
+(0 rows)
+
+===== Nadie de Food Store tiene password_hash ni pertenece a roles predefinidos pg_* (esperado: 0 filas) =====
+ rol | problema 
+-----+----------
+(0 rows)
 

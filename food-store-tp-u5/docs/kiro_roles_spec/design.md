@@ -26,9 +26,9 @@ foodstore_owner (NOLOGIN, dueño)
 | categoria, producto | S | – | – | S | – | SIUD |
 | pedido | S | I, U(estado, eliminado) | S | S | – | SIUD |
 | detalle_pedido | S | I, U(eliminado) | S | S | – | SIUD |
-| usuario | S(id, nombre, email, rol, telefono, direccion) | – | S(8 col.), U(bloqueado) | – | – | SIUD |
+| usuario | S(id, nombre, email, rol, telefono, direccion) | – | S(8 col.), U(bloqueado, intentos_fallidos) | – | – | S(10 col., sin password_hash), U(nombre, email, telefono, direccion, eliminado) |
 | usuario_anon | – | – | – | S | – | SIUD |
-| venta_diaria_categoria | – | – | – | S | – | SIUD |
+| venta_diaria_categoria | – | – | – | S | – | **S** (dato derivado) |
 | auditoria_login / _password | – | – | – | – | S | **S** |
 | secuencias pedido / detalle | – | USAGE | – | – | – | USAGE, SELECT, UPDATE |
 | fn_autenticar | – | EXECUTE | – | – | – | – |
@@ -43,6 +43,10 @@ S = SELECT, I = INSERT, U = UPDATE, D = DELETE.
 - **`REVOKE EXECUTE … FROM PUBLIC`.** PostgreSQL otorga `EXECUTE` a `PUBLIC` sobre toda función nueva. Si no se revoca, cualquier rol que se conecte podría invocar `fn_resetear_password`.
 - **Funciones de pgcrypto.** Al revocar `EXECUTE` a `PUBLIC`, `crypt` y `gen_salt` dejan de estar disponibles para el dueño. Se le otorgan explícitamente.
 - **Disparadores de la Unidad 4.** Las funciones `fn_vdc_*` mantienen `venta_diaria_categoria` cuando la app inserta detalles. Pasan a ser `SECURITY DEFINER`, así `app_web` no necesita permisos sobre la tabla redundante.
+- **`admin_datos` sin credenciales (revisión posterior a la auditoría de IA).** No lee ni escribe `password_hash`, no cambia `rol` y no hace `INSERT`/`DELETE` en `usuario`. Con el permiso original podía cambiar el hash de cualquiera y entrar como esa persona. Tampoco escribe `venta_diaria_categoria`, que la mantienen los disparadores.
+- **Reseteos acotados.** `fn_resetear_password` rechaza las cuentas con rol `ADMIN`: soporte no puede tomar una cuenta administrativa.
+- **Membresías `WITH INHERIT TRUE, SET FALSE`.** Los roles de login heredan los privilegios pero no pueden hacer `SET ROLE` al grupo.
+- **Contraseñas fuera del log.** `roles.sql` apaga `log_statement` en su propia sesión, porque `ALTER ROLE … PASSWORD` viaja en texto plano.
 - **Auditoría inmutable para el administrador.** `admin_datos` sólo lee `auditoria_*`. Las filas las escriben las funciones, que corren como el dueño.
 - **Default privileges.** `ALTER DEFAULT PRIVILEGES FOR ROLE foodstore_owner` da DML a `admin_datos` sobre toda tabla futura y nada a `PUBLIC`. Los roles de grupo **no** reciben acceso automático: cada tabla nueva requiere un `GRANT` explícito y justificado. Si la tabla futura es de auditoría, el script que la crea debe revocarle el DML a `admin_datos`.
 - **Contraseñas fuera del repo.** `roles.sql` las lee de variables de entorno con `\getenv`. El archivo `.env.example` documenta las variables.
@@ -50,6 +54,6 @@ S = SELECT, I = INSERT, U = UPDATE, D = DELETE.
 
 ## Testing Strategy
 
-- `\du` y `information_schema.role_table_grants` / `column_privileges` comparados contra la matriz → `evidencia/verificacion_permisos.txt`.
+- `\du` y `information_schema.role_table_grants` / `column_privileges` comparados contra la matriz → `docs/verificacion_permisos.txt`.
 - Pruebas positivas y negativas por rol con `SET ROLE`, incluidas en `roles.sql`.
 - El simulacro de la Parte C verifica en particular el criterio 6.5.

@@ -9,7 +9,7 @@
 \du
 
 \echo '===== Membresías (pg_auth_members) ====='
-SELECT r.rolname AS rol_grupo, m.rolname AS miembro, am.admin_option, am.inherit_option
+SELECT r.rolname AS rol_grupo, m.rolname AS miembro, am.admin_option, am.inherit_option, am.set_option
 FROM pg_auth_members am
 JOIN pg_roles r ON r.oid = am.roleid
 JOIN pg_roles m ON m.oid = am.member
@@ -28,7 +28,7 @@ ORDER BY grantee, table_name;
 SELECT grantee, privilege_type, string_agg(column_name, ', ' ORDER BY column_name) AS columnas
 FROM information_schema.column_privileges
 WHERE table_schema = 'public' AND table_name = 'usuario'
-  AND grantee IN ('rol_app_lectura','rol_soporte')
+  AND grantee IN ('rol_app_lectura','rol_soporte','admin_datos')
 GROUP BY grantee, privilege_type
 ORDER BY 1, 2;
 
@@ -58,9 +58,11 @@ UNION ALL
 -- admin_datos: DML sobre todas las tablas y vistas de negocio, sólo SELECT sobre auditoría
 SELECT 'admin_datos', c.relname, p
 FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace,
-     unnest(CASE WHEN c.relname LIKE 'auditoria\_%' THEN ARRAY['SELECT']
+     unnest(CASE WHEN c.relname LIKE 'auditoria\_%'
+                   OR c.relname = 'venta_diaria_categoria' THEN ARRAY['SELECT']
                  ELSE ARRAY['SELECT','INSERT','UPDATE','DELETE'] END) p
-WHERE n.nspname = 'public' AND c.relkind IN ('r','v');
+WHERE n.nspname = 'public' AND c.relkind IN ('r','v')
+  AND c.relname <> 'usuario';          -- sobre usuario, admin_datos sólo tiene permisos de columna
 
 -- usuario_anon se agrega en la Parte D
 INSERT INTO esperado
@@ -85,3 +87,30 @@ SELECT pg_get_userbyid(d.defaclrole) AS para_objetos_de, n.nspname AS esquema,
        d.defaclacl AS acl
 FROM pg_default_acl d LEFT JOIN pg_namespace n ON n.oid = d.defaclnamespace
 ORDER BY tipo;
+
+\echo '===== Columnas de usuario con privilegio de columna — esperado exacto (0 filas de diferencia) ====='
+WITH esperado_col(grantee, privilege_type, column_name) AS (
+    SELECT 'rol_app_lectura', 'SELECT', unnest(ARRAY['id','nombre','email','rol','telefono','direccion'])
+    UNION ALL SELECT 'rol_soporte', 'SELECT', unnest(ARRAY['id','nombre','email','rol','telefono','fecha_alta','bloqueado','intentos_fallidos'])
+    UNION ALL SELECT 'rol_soporte', 'UPDATE', unnest(ARRAY['bloqueado','intentos_fallidos'])
+    UNION ALL SELECT 'admin_datos', 'SELECT', unnest(ARRAY['id','nombre','email','rol','telefono','direccion','fecha_alta','intentos_fallidos','bloqueado','eliminado'])
+    UNION ALL SELECT 'admin_datos', 'UPDATE', unnest(ARRAY['nombre','email','telefono','direccion','eliminado'])
+), real_col AS (
+    SELECT grantee::text, privilege_type::text, column_name::text
+    FROM information_schema.column_privileges
+    WHERE table_schema = 'public' AND table_name = 'usuario'
+      AND grantee IN ('rol_app_lectura','rol_soporte','admin_datos')
+)
+(SELECT 'sobra' AS dif, * FROM real_col EXCEPT SELECT 'sobra', * FROM esperado_col)
+UNION ALL
+(SELECT 'falta', * FROM esperado_col EXCEPT SELECT 'falta', * FROM real_col);
+
+\echo '===== Nadie de Food Store tiene password_hash ni pertenece a roles predefinidos pg_* (esperado: 0 filas) ====='
+SELECT r AS rol, 'lee password_hash' AS problema
+FROM unnest(ARRAY['app_web','admin_datos','soporte_mesa','reportes_bi','auditor_seg']) r
+WHERE has_column_privilege(r, 'usuario', 'password_hash', 'SELECT')
+UNION ALL
+SELECT u.rolname, 'miembro de ' || g.rolname
+FROM pg_auth_members am JOIN pg_roles g ON g.oid = am.roleid JOIN pg_roles u ON u.oid = am.member
+WHERE g.rolname LIKE 'pg\_%' AND u.rolname IN ('foodstore_owner','app_web','admin_datos','soporte_mesa','reportes_bi','auditor_seg')
+   OR (g.rolname = 'foodstore_owner');

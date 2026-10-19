@@ -142,7 +142,8 @@ $$;
 
 -- ---------------------------------------------------------------------
 -- 4. fn_resetear_password(usuario_id, nueva) — uso exclusivo de soporte
---    Exige longitud mínima, desbloquea la cuenta y deja registro.
+--    Exige longitud mínima, rechaza cuentas ADMIN, desbloquea la cuenta y
+--    deja registro con session_user (no current_user, que sería el dueño).
 -- ---------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_resetear_password(p_usuario_id BIGINT, p_nueva TEXT)
 RETURNS VOID
@@ -153,6 +154,13 @@ AS $$
 BEGIN
     IF p_nueva IS NULL OR length(p_nueva) < 10 THEN
         RAISE EXCEPTION 'La nueva contraseña debe tener al menos 10 caracteres';
+    END IF;
+
+    -- Soporte no puede tomar cuentas administrativas de la aplicación
+    -- (hallazgo C2 de la auditoría de IA, verificado contra la base).
+    IF EXISTS (SELECT 1 FROM usuario WHERE id = p_usuario_id AND rol = 'ADMIN') THEN
+        RAISE EXCEPTION 'Las cuentas ADMIN no se resetean desde soporte'
+              USING ERRCODE = 'insufficient_privilege';
     END IF;
 
     UPDATE usuario

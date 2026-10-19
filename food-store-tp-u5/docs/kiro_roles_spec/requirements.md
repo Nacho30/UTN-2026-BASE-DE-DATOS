@@ -40,9 +40,10 @@ Food Store necesita un esquema de identidades en PostgreSQL que aplique el princ
 
 #### Acceptance Criteria
 1. THE rol SHALL tener `SELECT` sobre `usuario(id, nombre, email, rol, telefono, fecha_alta, bloqueado, intentos_fallidos)`.
-2. THE rol SHALL tener `UPDATE` sólo sobre `usuario(bloqueado)`.
+2. THE rol SHALL tener `UPDATE` sólo sobre `usuario(bloqueado, intentos_fallidos)`.
 3. THE rol SHALL tener `SELECT` sobre `pedido` y `detalle_pedido`.
 4. THE rol SHALL tener `EXECUTE` sobre `fn_resetear_password` y no sobre ninguna otra función de credenciales.
+5. IF soporte intenta resetear una cuenta con rol `ADMIN` THEN la función SHALL rechazarlo con `insufficient_privilege`.
 
 ### Requirement 4 — Reportes (`rol_reportes`)
 
@@ -70,7 +71,7 @@ Food Store necesita un esquema de identidades en PostgreSQL que aplique el princ
 
 #### Acceptance Criteria
 1. THE `app_web` SHALL ser miembro de `rol_app_lectura` y `rol_app_escritura`, con límite de conexiones.
-2. THE `admin_datos` SHALL tener `SELECT, INSERT, UPDATE, DELETE` sobre las tablas de negocio y sólo `SELECT` sobre las tablas de auditoría. Justificación: administra los datos, pero no puede borrar el rastro de lo que hizo.
+2. THE `admin_datos` SHALL tener `SELECT, INSERT, UPDATE, DELETE` sobre las tablas de negocio, sólo `SELECT` sobre las tablas de auditoría y sobre `venta_diaria_categoria`, y sobre `usuario` sólo columnas sin credenciales (`SELECT` sin `password_hash`; `UPDATE` de datos de contacto y `eliminado`). Justificación: administra los datos, pero no puede borrar el rastro de lo que hizo ni tomar la cuenta de nadie.
 3. THE `admin_datos` SHALL NOT ser superusuario, ni tener `CREATEROLE` o `CREATEDB`, ni ser dueño de objetos.
 4. THE roles de persona `soporte_mesa`, `reportes_bi` y `auditor_seg` SHALL heredar de su rol de grupo.
 5. IF un rol de bajo privilegio intenta otorgarse membresía en `admin_datos` THEN THE motor SHALL rechazarlo.

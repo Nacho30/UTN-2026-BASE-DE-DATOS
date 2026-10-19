@@ -15,6 +15,13 @@
 \getenv pw_reportes    PW_REPORTES
 \getenv pw_auditor     PW_AUDITOR
 
+-- Las contraseñas viajan en texto plano en ALTER ROLE ... PASSWORD, y con
+-- log_statement = 'mod' (Parte B) quedarían en el log del servidor
+-- (verificado: docs/respuestas_ia/P1_validacion.txt). Se apaga el registro
+-- SÓLO en esta sesión (parámetros reservados al superusuario).
+SET log_statement = 'none';
+SET log_min_error_statement = 'panic';
+
 -- ---------------------------------------------------------------------
 -- 0. Creación idempotente de roles (CREATE ROLE no tiene IF NOT EXISTS)
 -- ---------------------------------------------------------------------
@@ -39,17 +46,17 @@ $$;
 
 -- Atributos explícitos: ningún rol puede crear roles, bases ni saltear RLS
 ALTER ROLE foodstore_owner   NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
-ALTER ROLE rol_app_lectura   NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
-ALTER ROLE rol_app_escritura NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
-ALTER ROLE rol_soporte       NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
-ALTER ROLE rol_reportes      NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
-ALTER ROLE rol_auditor       NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
+ALTER ROLE rol_app_lectura   NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+ALTER ROLE rol_app_escritura NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+ALTER ROLE rol_soporte       NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+ALTER ROLE rol_reportes      NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+ALTER ROLE rol_auditor       NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
 
-ALTER ROLE app_web      LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE CONNECTION LIMIT 50 PASSWORD :'pw_app_web';
-ALTER ROLE admin_datos  LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE CONNECTION LIMIT 3  PASSWORD :'pw_admin_datos';
-ALTER ROLE soporte_mesa LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE CONNECTION LIMIT 5  PASSWORD :'pw_soporte';
-ALTER ROLE reportes_bi  LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE CONNECTION LIMIT 5  PASSWORD :'pw_reportes';
-ALTER ROLE auditor_seg  LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE CONNECTION LIMIT 2  PASSWORD :'pw_auditor';
+ALTER ROLE app_web      LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS CONNECTION LIMIT 50 PASSWORD :'pw_app_web';
+ALTER ROLE admin_datos  LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS CONNECTION LIMIT 3  PASSWORD :'pw_admin_datos';
+ALTER ROLE soporte_mesa LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS CONNECTION LIMIT 5  PASSWORD :'pw_soporte';
+ALTER ROLE reportes_bi  LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS CONNECTION LIMIT 5  PASSWORD :'pw_reportes';
+ALTER ROLE auditor_seg  LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS CONNECTION LIMIT 2  PASSWORD :'pw_auditor';
 
 -- ---------------------------------------------------------------------
 -- 1. Propiedad: todo pasa a foodstore_owner (NOLOGIN, no superusuario)
@@ -129,7 +136,9 @@ GRANT EXECUTE ON FUNCTION fn_autenticar(text, text) TO rol_app_escritura;
 -- ---------------------------------------------------------------------
 GRANT SELECT (id, nombre, email, rol, telefono, fecha_alta, bloqueado, intentos_fallidos)
       ON usuario TO rol_soporte;
-GRANT UPDATE (bloqueado) ON usuario TO rol_soporte;
+-- intentos_fallidos: al desbloquear hay que poder reiniciar el contador; si no,
+-- la cuenta se vuelve a bloquear con el próximo fallo (hallazgo M3 de la IA)
+GRANT UPDATE (bloqueado, intentos_fallidos) ON usuario TO rol_soporte;
 GRANT SELECT ON pedido, detalle_pedido TO rol_soporte;
 GRANT EXECUTE ON FUNCTION fn_resetear_password(bigint, text) TO rol_soporte;
 
@@ -137,6 +146,13 @@ GRANT EXECUTE ON FUNCTION fn_resetear_password(bigint, text) TO rol_soporte;
 -- 6. rol_reportes — Req. 4  (usuario_anon se otorga en usuario_anon.sql)
 -- ---------------------------------------------------------------------
 GRANT SELECT ON categoria, producto, pedido, detalle_pedido, venta_diaria_categoria TO rol_reportes;
+-- Si usuario_anon ya existe, se vuelve a otorgar acá: el REVOKE de la sección 2
+-- lo borraba al re-ejecutar este script (hallazgo M4 de la IA)
+DO $$ BEGIN
+    IF to_regclass('public.usuario_anon') IS NOT NULL THEN
+        GRANT SELECT ON public.usuario_anon TO rol_reportes;
+    END IF;
+END $$;
 
 -- ---------------------------------------------------------------------
 -- 7. rol_auditor — Req. 5 (separación de funciones)
@@ -150,14 +166,23 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO admin_dat
 REVOKE INSERT, UPDATE, DELETE ON auditoria_login, auditoria_password FROM admin_datos;
 GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO admin_datos;
 REVOKE USAGE, SELECT, UPDATE ON SEQUENCE auditoria_login_id_seq, auditoria_password_id_seq FROM admin_datos;
+-- usuario: nunca credenciales ni rol (hallazgo C1 de la IA, verificado). Sin
+-- INSERT ni DELETE: las altas pasan por la app y las bajas son lógicas.
+REVOKE ALL ON usuario FROM admin_datos;
+GRANT SELECT (id, nombre, email, rol, telefono, direccion, fecha_alta,
+              intentos_fallidos, bloqueado, eliminado) ON usuario TO admin_datos;
+GRANT UPDATE (nombre, email, telefono, direccion, eliminado) ON usuario TO admin_datos;
+-- venta_diaria_categoria la mantienen sólo los disparadores (dato derivado)
+REVOKE INSERT, UPDATE, DELETE ON venta_diaria_categoria FROM admin_datos;
 
 -- ---------------------------------------------------------------------
 -- 9. Membresías de login (sin ADMIN OPTION: nadie puede delegar)
 -- ---------------------------------------------------------------------
-GRANT rol_app_lectura, rol_app_escritura TO app_web;
-GRANT rol_soporte  TO soporte_mesa;
-GRANT rol_reportes TO reportes_bi;
-GRANT rol_auditor  TO auditor_seg;
+-- INHERIT TRUE: heredan los privilegios; SET FALSE: no pueden SET ROLE al grupo
+GRANT rol_app_lectura, rol_app_escritura TO app_web      WITH INHERIT TRUE, SET FALSE;
+GRANT rol_soporte                        TO soporte_mesa WITH INHERIT TRUE, SET FALSE;
+GRANT rol_reportes                       TO reportes_bi  WITH INHERIT TRUE, SET FALSE;
+GRANT rol_auditor                        TO auditor_seg  WITH INHERIT TRUE, SET FALSE;
 
 -- ---------------------------------------------------------------------
 -- 10. Disparadores de la Unidad 4: corren como el dueño
@@ -170,6 +195,7 @@ BEGIN
     FOR f IN SELECT p.oid::regprocedure AS firma
              FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
              WHERE n.nspname = 'public'
+               AND p.prorettype = 'trigger'::regtype      -- sólo funciones de disparador
                AND (p.proname LIKE 'fn\_vdc\_%' OR p.proname LIKE 'fn\_clr\_%' OR p.proname LIKE 'fn\_rd\_%')
     LOOP
         EXECUTE format('ALTER FUNCTION %s SECURITY DEFINER SET search_path = public, pg_temp', f.firma);
@@ -242,6 +268,7 @@ SELECT resultado FROM (VALUES
  (pg_temp.probar('soporte_mesa', 'UPDATE usuario SET bloqueado = TRUE WHERE id = 1', TRUE)),
  (pg_temp.probar('soporte_mesa', 'UPDATE usuario SET email = ''x@x.com'' WHERE id = 1', FALSE)),
  (pg_temp.probar('soporte_mesa', 'SELECT fn_resetear_password(1, ''NuevaClave123'')', TRUE)),
+ (pg_temp.probar('soporte_mesa', 'SELECT fn_resetear_password(50, ''NuevaClave123'')', FALSE)),
  (pg_temp.probar('soporte_mesa', 'SELECT * FROM auditoria_password', FALSE)),
  (pg_temp.probar('reportes_bi',  'SELECT SUM(total) FROM pedido', TRUE)),
  (pg_temp.probar('reportes_bi',  'SELECT nombre FROM usuario LIMIT 1', FALSE)),
@@ -249,7 +276,15 @@ SELECT resultado FROM (VALUES
  (pg_temp.probar('auditor_seg',  'SELECT * FROM pedido LIMIT 1', FALSE)),
  (pg_temp.probar('admin_datos',  'UPDATE producto SET stock = stock WHERE id = 1', TRUE)),
  (pg_temp.probar('admin_datos',  'DELETE FROM auditoria_login', FALSE)),
+ (pg_temp.probar('admin_datos',  'SELECT password_hash FROM usuario LIMIT 1', FALSE)),
+ (pg_temp.probar('admin_datos',  'UPDATE usuario SET rol = ''ADMIN'' WHERE id = 1', FALSE)),
+ (pg_temp.probar('admin_datos',  'UPDATE usuario SET telefono = telefono WHERE id = 1', TRUE)),
+ (pg_temp.probar('admin_datos',  'UPDATE venta_diaria_categoria SET total_vendido = 0', FALSE)),
+ (pg_temp.probar('soporte_mesa', 'UPDATE usuario SET bloqueado = FALSE, intentos_fallidos = 0 WHERE id = 1', TRUE)),
  (pg_temp.probar('admin_datos',  'CREATE TABLE intrusa (x int)', FALSE)),
  (pg_temp.probar('admin_datos',  'GRANT admin_datos TO app_web', FALSE)),
  (pg_temp.probar('app_web',      'GRANT admin_datos TO rol_app_lectura', FALSE))
 ) AS t(resultado);
+
+RESET log_statement;
+RESET log_min_error_statement;
