@@ -1,0 +1,14 @@
+== Consulta propuesta por la IA (y su alternativa) vs usuario_anon: filas de diferencia simétrica
+      comparacion       | filas_distintas 
+------------------------+-----------------
+ propuesta IA vs anon   |               0
+ alternativa IA vs anon |               0
+(2 rows)
+
+== Afirmación de la IA: date_trunc sobre DATE depende de la zona horaria
+SET
+      tipo_resultado      |        sin_cast        | mes_texto 
+--------------------------+------------------------+-----------
+ timestamp with time zone | 2025-09-01 00:00:00+14 | 2025-09
+(1 row)
+
