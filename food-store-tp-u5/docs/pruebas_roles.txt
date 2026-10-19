@@ -1,0 +1,49 @@
+===== Objetos futuros: privilegios heredados =====
+BEGIN
+SET
+CREATE TABLE
+CREATE FUNCTION
+RESET
+    objeto    |                                    acl                                     
+--------------+----------------------------------------------------------------------------
+ tabla_futura | {foodstore_owner=arwdDxt/foodstore_owner,admin_datos=arwd/foodstore_owner}
+ fn_futura()  | {foodstore_owner=X/foodstore_owner}
+(2 rows)
+
+ROLLBACK
+===== Pruebas de permisos =====
+CREATE FUNCTION
+                                                                       resultado                                                                       
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+ OK   | app_web        | permitido | SELECT id, nombre, email FROM usuario LIMIT 1
+ OK   | app_web        | denegado  | SELECT password_hash FROM usuario LIMIT 1
+ OK   | app_web        | permitido | SELECT fn_autenticar('x@x.com', 'x')
+ OK   | app_web        | permitido | INSERT INTO pedido (fecha, usuario_id) VALUES (CURRENT_DATE, 1)
+ OK   | app_web        | permitido | INSERT INTO detalle_pedido (pedido_id, producto_id, cantidad, precio_unitario, subtotal) VALUES (1, 1, 1, 10, 10)
+ OK   | app_web        | denegado  | UPDATE pedido SET total = 0 WHERE id = 1
+ OK   | app_web        | denegado  | DELETE FROM pedido WHERE id = 1
+ OK   | app_web        | denegado  | SELECT fn_resetear_password(1, 'NuevaClave123')
+ OK   | soporte_mesa   | permitido | SELECT email, bloqueado FROM usuario LIMIT 1
+ OK   | soporte_mesa   | permitido | UPDATE usuario SET bloqueado = TRUE WHERE id = 1
+ OK   | soporte_mesa   | denegado  | UPDATE usuario SET email = 'x@x.com' WHERE id = 1
+ OK   | soporte_mesa   | permitido | SELECT fn_resetear_password(1, 'NuevaClave123')
+ OK   | soporte_mesa   | denegado  | SELECT fn_resetear_password(50, 'NuevaClave123')
+ OK   | soporte_mesa   | denegado  | SELECT * FROM auditoria_password
+ OK   | reportes_bi    | permitido | SELECT SUM(total) FROM pedido
+ OK   | reportes_bi    | denegado  | SELECT nombre FROM usuario LIMIT 1
+ OK   | auditor_seg    | permitido | SELECT * FROM auditoria_login LIMIT 1
+ OK   | auditor_seg    | denegado  | SELECT * FROM pedido LIMIT 1
+ OK   | admin_datos    | permitido | UPDATE producto SET stock = stock WHERE id = 1
+ OK   | admin_datos    | denegado  | DELETE FROM auditoria_login
+ OK   | admin_datos    | denegado  | SELECT password_hash FROM usuario LIMIT 1
+ OK   | admin_datos    | denegado  | UPDATE usuario SET rol = 'ADMIN' WHERE id = 1
+ OK   | admin_datos    | permitido | UPDATE usuario SET telefono = telefono WHERE id = 1
+ OK   | admin_datos    | denegado  | UPDATE venta_diaria_categoria SET total_vendido = 0
+ OK   | soporte_mesa   | permitido | UPDATE usuario SET bloqueado = FALSE, intentos_fallidos = 0 WHERE id = 1
+ OK   | admin_datos    | denegado  | CREATE TABLE intrusa (x int)
+ OK   | admin_datos    | denegado  | GRANT admin_datos TO app_web
+ OK   | app_web        | denegado  | GRANT admin_datos TO rol_app_lectura
+(28 rows)
+
+RESET
+RESET

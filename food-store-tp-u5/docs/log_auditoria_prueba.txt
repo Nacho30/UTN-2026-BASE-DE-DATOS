@@ -1,0 +1,17 @@
+2026-10-19 19:54:30.466 -03 [389] user=[unknown] db=[unknown] host=127.0.0.1 app=[unknown] LOG:  connection received: host=127.0.0.1 port=45332
+2026-10-19 19:54:30.473 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=[unknown] LOG:  connection authenticated: identity="app_web" method=scram-sha-256 (/home/claude/pgdata/pg_hba.conf:7)
+2026-10-19 19:54:30.473 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=[unknown] LOG:  connection authorized: user=app_web database=foodstore_u5 application_name=foodstore-web
+2026-10-19 19:54:30.477 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web LOG:  statement: INSERT INTO pedido (fecha, usuario_id, estado) VALUES (CURRENT_DATE, 42, 'CONFIRMADO');
+2026-10-19 19:54:30.479 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web LOG:  statement: INSERT INTO detalle_pedido (pedido_id, producto_id, cantidad, precio_unitario, subtotal)
+	SELECT currval('pedido_id_seq'), id, 2, precio, precio * 2 FROM producto WHERE id = 5;
+2026-10-19 19:54:30.483 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web LOG:  statement: UPDATE pedido SET estado = 'ENTREGADO' WHERE id = currval('pedido_id_seq');
+2026-10-19 19:54:30.638 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web LOG:  fn_autenticar: FALLO motivo=password_incorrecta usuario_id=42 email=camila.perez42@yahoo.com.ar
+2026-10-19 19:54:30.638 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web CONTEXT:  PL/pgSQL function fn_autenticar(text,text) line 40 at RAISE
+2026-10-19 19:54:30.638 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web STATEMENT:  SELECT fn_autenticar('camila.perez42@yahoo.com.ar', 'contraseña-equivocada') AS login_app;
+2026-10-19 19:54:30.639 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web LOG:  statement: DELETE FROM pedido WHERE id = currval('pedido_id_seq');
+2026-10-19 19:54:30.640 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web ERROR:  permission denied for table pedido
+2026-10-19 19:54:30.640 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web STATEMENT:  DELETE FROM pedido WHERE id = currval('pedido_id_seq');
+2026-10-19 19:54:30.640 -03 [389] user=app_web db=foodstore_u5 host=127.0.0.1 app=foodstore-web LOG:  disconnection: session time: 0:00:00.174 user=app_web database=foodstore_u5 host=127.0.0.1 port=45332
+2026-10-19 19:54:30.668 -03 [391] user=[unknown] db=[unknown] host=127.0.0.1 app=[unknown] LOG:  connection received: host=127.0.0.1 port=45336
+2026-10-19 19:54:30.674 -03 [391] user=app_web db=foodstore_u5 host=127.0.0.1 app=[unknown] FATAL:  password authentication failed for user "app_web"
+2026-10-19 19:54:30.674 -03 [391] user=app_web db=foodstore_u5 host=127.0.0.1 app=[unknown] DETAIL:  Connection matched file "/home/claude/pgdata/pg_hba.conf" line 7: "host    foodstore_u5  all       127.0.0.1/32    scram-sha-256"

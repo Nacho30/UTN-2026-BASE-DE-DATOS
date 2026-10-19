@@ -1,0 +1,51 @@
+2026-10-19 19:58:40.732 -03 [601] user=[unknown] db=[unknown] host=[local] app=[unknown] LOG:  connection received: host=[local]
+2026-10-19 19:58:40.733 -03 [601] user=postgres db=foodstore_u5 host=[local] app=[unknown] LOG:  connection authenticated: identity="postgres" method=peer (<PGDATA>/pg_hba.conf:4)
+2026-10-19 19:58:40.733 -03 [601] user=postgres db=foodstore_u5 host=[local] app=[unknown] LOG:  connection authorized: user=postgres database=foodstore_u5 application_name=psql
+2026-10-19 19:58:40.736 -03 [601] user=postgres db=foodstore_u5 host=[local] app=psql LOG:  statement: UPDATE usuario SET intentos_fallidos = 0, bloqueado = FALSE WHERE id IN (U-f2c23080, U-11b9a2f8);
+2026-10-19 19:58:40.738 -03 [601] user=postgres db=foodstore_u5 host=[local] app=psql LOG:  disconnection: session time: 0:00:00.006 user=postgres database=foodstore_u5 host=[local]
+2026-10-19 19:58:40.767 -03 [603] user=[unknown] db=[unknown] host=ip-01 app=[unknown] LOG:  connection received: host=ip-01 port=39450
+2026-10-19 19:58:40.778 -03 [603] user=app_web db=foodstore_u5 host=ip-01 app=[unknown] LOG:  connection authenticated: identity="app_web" method=scram-sha-256 (<PGDATA>/pg_hba.conf:7)
+2026-10-19 19:58:40.778 -03 [603] user=app_web db=foodstore_u5 host=ip-01 app=[unknown] LOG:  connection authorized: user=app_web database=foodstore_u5 application_name=foodstore-web
+2026-10-19 19:58:40.787 -03 [603] user=app_web db=foodstore_u5 host=ip-01 app=foodstore-web LOG:  fn_autenticar: EXITO usuario_id=U-f2c23080
+2026-10-19 19:58:40.787 -03 [603] user=app_web db=foodstore_u5 host=ip-01 app=foodstore-web CONTEXT:  PL/pgSQL function fn_autenticar(text,text) line 30 at RAISE
+2026-10-19 19:58:40.787 -03 [603] user=app_web db=foodstore_u5 host=ip-01 app=foodstore-web STATEMENT:  SELECT fn_autenticar($1, $2) 
+2026-10-19 19:58:40.788 -03 [603] user=app_web db=foodstore_u5 host=ip-01 app=foodstore-web LOG:  disconnection: session time: 0:00:00.021 user=app_web database=foodstore_u5 host=ip-01 port=39450
+2026-10-19 19:58:43.820 -03 [609] user=[unknown] db=[unknown] host=ip-02 app=[unknown] LOG:  connection received: host=ip-02 port=48503
+2026-10-19 19:58:43.830 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=[unknown] LOG:  connection authenticated: identity="app_web" method=scram-sha-256 (<PGDATA>/pg_hba.conf:10)
+2026-10-19 19:58:43.830 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=[unknown] LOG:  connection authorized: user=app_web database=foodstore_u5 application_name=psql
+2026-10-19 19:58:43.837 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql LOG:  fn_autenticar: FALLO motivo=password_incorrecta usuario_id=U-11b9a2f8 intentos=1
+2026-10-19 19:58:43.837 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql CONTEXT:  PL/pgSQL function fn_autenticar(text,text) line 40 at RAISE
+2026-10-19 19:58:43.837 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  SELECT fn_autenticar($1, $2) AS intento_1 
+2026-10-19 19:58:44.845 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql LOG:  fn_autenticar: FALLO motivo=password_incorrecta usuario_id=U-11b9a2f8 intentos=2
+2026-10-19 19:58:44.845 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql CONTEXT:  PL/pgSQL function fn_autenticar(text,text) line 40 at RAISE
+2026-10-19 19:58:44.845 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  SELECT fn_autenticar($1, $2) AS intento_2 
+2026-10-19 19:58:45.854 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql LOG:  fn_autenticar: FALLO motivo=password_incorrecta usuario_id=U-11b9a2f8 intentos=3
+2026-10-19 19:58:45.854 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql CONTEXT:  PL/pgSQL function fn_autenticar(text,text) line 40 at RAISE
+2026-10-19 19:58:45.854 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  SELECT fn_autenticar($1, $2) AS intento_3 
+2026-10-19 19:58:46.861 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql LOG:  fn_autenticar: FALLO motivo=password_incorrecta usuario_id=U-11b9a2f8 intentos=4
+2026-10-19 19:58:46.861 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql CONTEXT:  PL/pgSQL function fn_autenticar(text,text) line 40 at RAISE
+2026-10-19 19:58:46.861 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  SELECT fn_autenticar($1, $2) AS intento_4 
+2026-10-19 19:58:47.869 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql LOG:  fn_autenticar: EXITO usuario_id=U-11b9a2f8
+2026-10-19 19:58:47.869 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql CONTEXT:  PL/pgSQL function fn_autenticar(text,text) line 30 at RAISE
+2026-10-19 19:58:47.869 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  SELECT fn_autenticar($1, $2) AS intento_5_exito 
+2026-10-19 19:58:47.871 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql ERROR:  permission denied for table usuario
+2026-10-19 19:58:47.871 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  SELECT id, email, password_hash FROM usuario LIMIT 5;
+2026-10-19 19:58:47.913 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql LOG:  statement: GRANT admin_datos TO rol_app_lectura;
+2026-10-19 19:58:47.913 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql ERROR:  permission denied to grant role "admin_datos"
+2026-10-19 19:58:47.913 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql DETAIL:  Only roles with the ADMIN option on role "admin_datos" may grant this role.
+2026-10-19 19:58:47.913 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  GRANT admin_datos TO rol_app_lectura;
+2026-10-19 19:58:47.957 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql ERROR:  permission denied to set role "admin_datos"
+2026-10-19 19:58:47.957 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  SET ROLE admin_datos;
+2026-10-19 19:58:47.957 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql ERROR:  permission denied for function fn_resetear_password
+2026-10-19 19:58:47.957 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  SELECT fn_resetear_password(U-11b9a2f8, '<redactado>');
+2026-10-19 19:58:47.957 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql LOG:  statement: DELETE FROM auditoria_login WHERE usuario_id = U-11b9a2f8;
+2026-10-19 19:58:47.958 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql ERROR:  permission denied for table auditoria_login
+2026-10-19 19:58:47.958 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql STATEMENT:  DELETE FROM auditoria_login WHERE usuario_id = U-11b9a2f8;
+2026-10-19 19:58:47.960 -03 [609] user=app_web db=foodstore_u5 host=ip-02 app=psql LOG:  disconnection: session time: 0:00:04.139 user=app_web database=foodstore_u5 host=ip-02 port=48503
+2026-10-19 19:58:49.994 -03 [614] user=[unknown] db=[unknown] host=ip-01 app=[unknown] LOG:  connection received: host=ip-01 port=39330
+2026-10-19 19:58:50.002 -03 [614] user=app_web db=foodstore_u5 host=ip-01 app=[unknown] LOG:  connection authenticated: identity="app_web" method=scram-sha-256 (<PGDATA>/pg_hba.conf:7)
+2026-10-19 19:58:50.002 -03 [614] user=app_web db=foodstore_u5 host=ip-01 app=[unknown] LOG:  connection authorized: user=app_web database=foodstore_u5 application_name=foodstore-web
+2026-10-19 19:58:50.012 -03 [614] user=app_web db=foodstore_u5 host=ip-01 app=foodstore-web LOG:  fn_autenticar: EXITO usuario_id=U-f2c23080
+2026-10-19 19:58:50.012 -03 [614] user=app_web db=foodstore_u5 host=ip-01 app=foodstore-web CONTEXT:  PL/pgSQL function fn_autenticar(text,text) line 30 at RAISE
+2026-10-19 19:58:50.012 -03 [614] user=app_web db=foodstore_u5 host=ip-01 app=foodstore-web STATEMENT:  SELECT fn_autenticar($1, $2) 
+2026-10-19 19:58:50.013 -03 [614] user=app_web db=foodstore_u5 host=ip-01 app=foodstore-web LOG:  disconnection: session time: 0:00:00.019 user=app_web database=foodstore_u5 host=ip-01 port=39330

@@ -1,0 +1,69 @@
+== A1 (IA): "fn_autenticar y fn_resetear_password no tienen search_path fijo"
+       proname        | prosecdef |            proconfig            
+----------------------+-----------+---------------------------------
+ fn_autenticar        | t         | {"search_path=public, pg_temp"}
+ fn_resetear_password | t         | {"search_path=public, pg_temp"}
+(2 rows)
+
+== C1 (IA): admin_datos puede leer password_hash y cambiar rol/password_hash
+ lee_hash | cambia_hash | cambia_rol | altera_resumen 
+----------+-------------+------------+----------------
+ t        | t           | t          | t
+(1 row)
+
+== C2 (IA): soporte puede resetear la contraseña de una cuenta ADMIN de la app
+  rol  
+-------
+ ADMIN
+(1 row)
+
+BEGIN
+SET
+ reseteo_admin 
+---------------
+ 
+(1 row)
+
+ROLLBACK
+== A2 (IA): atributos REPLICATION/BYPASSRLS en roles de grupo y login
+      rolname      | rolreplication | rolbypassrls 
+-------------------+----------------+--------------
+ rol_soporte       | f              | f
+ rol_reportes      | f              | f
+ rol_auditor       | f              | f
+ app_web           | f              | f
+ admin_datos       | f              | f
+ soporte_mesa      | f              | f
+ reportes_bi       | f              | f
+ auditor_seg       | f              | f
+ rol_app_lectura   | f              | f
+ rol_app_escritura | f              | f
+(10 rows)
+
+== A5 (IA): con log_statement=mod, ALTER ROLE ... PASSWORD queda en el log
+CREATE ROLE
+ALTER ROLE
+DROP ROLE
+== A5 (IA): PASSWORD vacío "deja el rol sin contraseña"
+NOTICE:  empty string is not a valid password, clearing password
+CREATE ROLE
+   rolname    | password_nula 
+--------------+---------------
+ prueba_vacia | t
+(1 row)
+
+DROP ROLE
+== M3 (IA): soporte desbloquea pero el contador queda alto
+ soporte_resetea_contador 
+--------------------------
+ f
+(1 row)
+
+== Membresías inesperadas en roles predefinidos pg_*
+        grupo         |  miembro   
+----------------------+------------
+ pg_read_all_settings | pg_monitor
+ pg_read_all_stats    | pg_monitor
+ pg_stat_scan_tables  | pg_monitor
+(3 rows)
+

@@ -1,0 +1,47 @@
+SET
+BEGIN
+SET
+DROP TABLE
+CREATE TABLE
+COMMENT
+INSERT 0 1000
+RESET
+GRANT
+COMMIT
+RESET
+===== Muestra de usuario_anon =====
+  id_anon   |    nombre_anon     |           email_anon           |   rol   |  mes_alta  
+------------+--------------------+--------------------------------+---------+------------
+ U-00de4bb5 | Usuario U-00de4bb5 | u-00de4bb5@anon.foodstore.test | CLIENTE | 2025-11-01
+ U-00e90225 | Usuario U-00e90225 | u-00e90225@anon.foodstore.test | CLIENTE | 2025-10-01
+ U-010e33c1 | Usuario U-010e33c1 | u-010e33c1@anon.foodstore.test | CLIENTE | 2026-07-01
+ U-02344ae1 | Usuario U-02344ae1 | u-02344ae1@anon.foodstore.test | CLIENTE | 2025-12-01
+ U-02f74d4d | Usuario U-02f74d4d | u-02f74d4d@anon.foodstore.test | CLIENTE | 2025-08-01
+(5 rows)
+
+===== Cardinalidad y seudónimos únicos (sin colisiones) =====
+ filas_usuario | filas_anon | seudonimos_distintos 
+---------------+------------+----------------------
+          1000 |       1000 |                 1000
+(1 row)
+
+===== Ningún dato identificable de usuario aparece en usuario_anon (esperado: 0) =====
+ coincidencias 
+---------------
+             0
+(1 row)
+
+===== Determinismo: regenerar da los mismos seudónimos (esperado: 1000 emparejados, 0 distintos) =====
+SET
+ emparejados | distintos 
+-------------+-----------
+        1000 |         0
+(1 row)
+
+RESET
+===== Permisos: reportes lee usuario_anon y no usuario =====
+ reportes_lee_anon | reportes_lee_usuario | admin_heredo_dml 
+-------------------+----------------------+------------------
+ t                 | f                    | t
+(1 row)
+
