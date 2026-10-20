@@ -1,0 +1,25 @@
+2026-10-20 08:48:58.862 -0300 Respaldo elegido: backups/foodstore_20261020_084525.dump (2800370 bytes)
+2026-10-20 08:48:58.873 -0300 SHA-256 verificado
+2026-10-20 08:48:58.926 -0300 CRONÓMETRO INICIA
+2026-10-20 08:48:59.002 -0300 createdb OK (76 ms)
+2026-10-20 08:49:00.035 -0300 pg_restore OK con --jobs=1 (1027 ms)
+2026-10-20 08:49:00.270 -0300 ANALYZE OK (231 ms)
+2026-10-20 08:49:00.345 -0300 Validación filas categoria: 15 = 15 OK
+2026-10-20 08:49:00.347 -0300 Validación filas producto: 307 = 307 OK
+2026-10-20 08:49:00.349 -0300 Validación filas cliente: 5003 = 5003 OK
+2026-10-20 08:49:00.351 -0300 Validación filas pedido: 150004 = 150004 OK
+2026-10-20 08:49:00.353 -0300 Validación filas pedido_producto: 375006 = 375006 OK
+2026-10-20 08:49:00.553 -0300 Validación productos_invalidos: 0 OK
+2026-10-20 08:49:00.555 -0300 Validación detalles_invalidos: 0 OK
+2026-10-20 08:49:00.557 -0300 Validación lineas_huerfanas: 0 OK
+2026-10-20 08:49:00.658 -0300 Control ctl_suma_stock: 299250124 OK
+2026-10-20 08:49:00.660 -0300 Control ctl_importe_lineas: 6343452800.00 OK
+2026-10-20 08:49:00.662 -0300 Control ctl_max_id_pedido: 150004 OK
+2026-10-20 08:49:00.703 -0300 Disparadores de negocio restaurados: 2
+2026-10-20 08:49:00.707 -0300 Validaciones: 433 ms
+2026-10-20 08:49:00.712 -0300 CRONÓMETRO DETIENE
+2026-10-20 08:49:00.775 -0300 RTO observado (createdb → validaciones OK): 1787 ms (1.8 s)
+2026-10-20 08:49:00.779 -0300 Tiempo total incluidas verificaciones previas: 1925 ms
+2026-10-20 08:49:00.789 -0300 Respaldo del 2026-10-20 08:45:25 -0300; antigüedad al iniciar el simulacro: 213 s (3.5 min)
+2026-10-20 08:49:00.790 -0300 RPO observado: se perderían 40 pedidos creados y 3000 cancelaciones hechas después del respaldo (foodstore tiene hoy 147044 pedidos; el respaldo, 150004)
+2026-10-20 08:49:00.793 -0300 RESULTADO: OK

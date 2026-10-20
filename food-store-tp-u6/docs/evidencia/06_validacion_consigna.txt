@@ -1,0 +1,39 @@
+# Consulta de validación de la consigna, tal cual, sobre foodstore_restore_test
+ERROR:  relation "detalle_pedido" does not exist
+LINE 5: UNION ALL SELECT 'detalle_pedido', COUNT(*) FROM detalle_ped...
+                                                         ^
+ productos_invalidos 
+---------------------
+                   0
+(1 row)
+
+ERROR:  relation "detalle_pedido" does not exist
+LINE 1: SELECT COUNT(*) AS detalles_invalidos FROM detalle_pedido WH...
+                                                   ^
+# Adaptada al esquema real (pedido_producto):
+      tabla      | filas  
+-----------------+--------
+ categoria       |     15
+ producto        |    307
+ cliente         |   5003
+ pedido          | 150004
+ pedido_producto | 375006
+(5 rows)
+
+ productos_invalidos 
+---------------------
+                   0
+(1 row)
+
+ detalles_invalidos 
+--------------------
+                  0
+(1 row)
+
+# foodstore no fue tocada por el simulacro:
+You are now connected to database "foodstore" as user "postgres".
+ current_database | pedidos 
+------------------+---------
+ foodstore        |  147044
+(1 row)
+

@@ -1,0 +1,15 @@
+# Mejora medida: pg_restore --jobs (servidor con 2 CPU), 5 corridas alternadas de cada uno, misma copia
+# restore = sólo pg_restore (ms); rto = createdb → validaciones OK (ms)
+jobs=1 restore=863 rto=1649
+jobs=2 restore=856 rto=1636
+jobs=1 restore=1066 rto=1928
+jobs=2 restore=814 rto=1590
+jobs=1 restore=1475 rto=2230
+jobs=2 restore=746 rto=1572
+jobs=1 restore=924 rto=1683
+jobs=2 restore=866 rto=1669
+jobs=1 restore=1075 rto=1871
+jobs=2 restore=831 rto=1654
+
+Mediana --jobs=1: restore 1066 ms, RTO 1871 ms
+Mediana --jobs=2: restore  831 ms, RTO 1636 ms  (-22 % en pg_restore, -13 % en el RTO)
