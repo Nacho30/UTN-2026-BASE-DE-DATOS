@@ -1,0 +1,23 @@
+# Parte 2 — pruebas de falla del respaldo (2026-10-20)
+$ ./scripts/probar_backup_fallas.sh
+OK    | servidor inalcanzable | código 1 | ERROR: respuesta inesperada al exportar el snapshot: psql: error: connection to server at "localhost" (127.0.0.1), port 5499 failed: Connection refused
+OK    | sin credenciales | código 1 | ERROR: respuesta inesperada al exportar el snapshot: psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: fe_sendauth: no password supplied
+OK    | pg_dump falla | código 1 | ERROR: pg_dump terminó con código 1
+Resultado: 3 de 3 pruebas OK
+exit=0
+
+== logs/backup_20261020_084611.log
+2026-10-20 08:46:11 -0300 Inicio respaldo de foodstore en localhost:5499 como postgres
+2026-10-20 08:46:11 -0300 ERROR: respuesta inesperada al exportar el snapshot: psql: error: connection to server at "localhost" (127.0.0.1), port 5499 failed: Connection refused
+2026-10-20 08:46:11 -0300 RESULTADO: FALLO
+== logs/backup_20261020_084612.log
+2026-10-20 08:46:12 -0300 Inicio respaldo de foodstore en localhost:5432 como postgres
+2026-10-20 08:46:12 -0300 ERROR: respuesta inesperada al exportar el snapshot: psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: fe_sendauth: no password supplied
+2026-10-20 08:46:12 -0300 RESULTADO: FALLO
+== logs/backup_20261020_084613.log
+2026-10-20 08:46:13 -0300 Inicio respaldo de foodstore en localhost:5432 como postgres
+2026-10-20 08:46:13 -0300 Snapshot exportado: 00000003-0000005F-1
+2026-10-20 08:46:13 -0300 Conteos previos registrados en logs/conteos_20261020_084613.csv: categoria,15 cliente,5003 producto,307 pedido,150004 pedido_producto,375006 
+pg_dump: error: falla inyectada por probar_backup_fallas.sh
+2026-10-20 08:46:13 -0300 ERROR: pg_dump terminó con código 1
+2026-10-20 08:46:13 -0300 RESULTADO: FALLO

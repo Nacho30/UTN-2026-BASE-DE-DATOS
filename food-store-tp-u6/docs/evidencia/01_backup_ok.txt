@@ -1,0 +1,62 @@
+# Parte 2 — ejecución manual de backup_foodstore.sh (2026-10-20)
+$ ./scripts/backup_foodstore.sh ; echo "exit=$?"
+2026-10-20 08:45:25 -0300 Inicio respaldo de foodstore en localhost:5432 como postgres
+2026-10-20 08:45:25 -0300 Snapshot exportado: 00000003-00000057-1
+2026-10-20 08:45:25 -0300 Conteos previos registrados en logs/conteos_20261020_084525.csv: categoria,15 cliente,5003 producto,307 pedido,150004 pedido_producto,375006 
+2026-10-20 08:45:26 -0300 Archivo: backups/foodstore_20261020_084525.dump
+2026-10-20 08:45:26 -0300 Tamaño: 2800370 bytes (2.7M)
+2026-10-20 08:45:26 -0300 SHA-256: 83fcb30a66d1be999a2d8140f74c7a08f3fb3e128f5cd7c8c821863cd6ac90fb
+2026-10-20 08:45:26 -0300 Objetos en el índice (pg_restore --list): 41
+2026-10-20 08:45:26 -0300 Duración de pg_dump: 603 ms
+2026-10-20 08:45:26 -0300 RESULTADO: OK
+exit=0
+
+$ ls -la backups/
+drwxr-xr-x 2 root root    4096 2026-10-20 08:45:58 .
+drwxrwxrwx 8 root root    4096 2026-10-20 08:45:25 ..
+-rw-r--r-- 1 root root 2800370 2026-10-20 08:45:25 foodstore_20261020_084525.dump
+-rw-r--r-- 1 root root      97 2026-10-20 08:45:26 foodstore_20261020_084525.dump.sha256
+
+$ cat backups/*.sha256 && sha256sum -c
+83fcb30a66d1be999a2d8140f74c7a08f3fb3e128f5cd7c8c821863cd6ac90fb  foodstore_20261020_084525.dump
+foodstore_20261020_084525.dump: OK
+
+$ cat logs/conteos_20261020_084525.csv
+clave,valor
+categoria,15
+cliente,5003
+producto,307
+pedido,150004
+pedido_producto,375006
+ctl_suma_stock,299250124
+ctl_importe_lineas,6343452800.00
+ctl_max_id_pedido,150004
+ctl_ultimo_pedido_epoch,1792409470
+ctl_hora_snapshot_epoch,1792496725
+
+$ pg_restore --list (primeras 25 líneas)
+;
+; Archive created at 2026-10-20 08:45:25 -03
+;     dbname: foodstore
+;     TOC Entries: 45
+;     Compression: gzip
+;     Dump Version: 1.15-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)
+;     Dumped by pg_dump version: 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)
+;
+;
+; Selected TOC Entries:
+;
+854; 1247 41078 TYPE public forma_pago postgres
+225; 1255 41155 FUNCTION public fn_categoria_baja_sin_productos_activos() postgres
+226; 1255 41157 FUNCTION public fn_facturacion_cliente(bigint, timestamp with time zone, timestamp with time zone) postgres
+224; 1255 41153 FUNCTION public fn_pedido_producto_valida_y_descuenta_stock() postgres
+238; 1255 41158 FUNCTION public fn_top_productos_categoria(bigint, integer) postgres
+240; 1255 41160 PROCEDURE public sp_cancelar_pedido(bigint) postgres
+239; 1255 41159 PROCEDURE public sp_registrar_pedido(bigint, public.forma_pago, jsonb, bigint) postgres
+216; 1259 41086 TABLE public categoria postgres
+215; 1259 41085 SEQUENCE public categoria_id_categoria_seq postgres
+220; 1259 41113 TABLE public cliente postgres
