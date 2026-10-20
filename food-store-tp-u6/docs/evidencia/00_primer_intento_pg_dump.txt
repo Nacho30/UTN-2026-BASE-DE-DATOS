@@ -1,0 +1,2 @@
+# 2026-10-20 08:38 -03 — comando de referencia de la consigna, tal cual, antes de ajustar pg_hba.conf
+pg_dump: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL:  pg_hba.conf rejects connection for host "127.0.0.1", user "postgres", database "foodstore", no encryption

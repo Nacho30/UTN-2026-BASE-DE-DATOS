@@ -18,3 +18,12 @@ Scripts SQL del proyecto integrador Food Store sobre PostgreSQL 16.
 - Todo script que escribe se entrega para correr dentro de `BEGIN; ... ROLLBACK;`.
 - Nunca generar `UPDATE` o `DELETE` sin `WHERE`. Categorías y productos NO se borran: baja lógica con `activo = FALSE` (R7).
 - En subconsultas con `NOT IN`, contemplar `NULL` (preferir `NOT EXISTS`).
+
+## Unidad 6 — respaldo y mantenimiento (`food-store-tp-u6/`)
+La especificación es `food-store-tp-u6/SPEC_U6.md`; si una instrucción del chat la contradice, gana la SPEC.
+- La base principal `foodstore` sólo se lee o recibe `VACUUM`/`ANALYZE`: nunca `dropdb`, `pg_restore`, `ALTER DATABASE` ni DML sobre ella desde estos scripts.
+- La única base que se puede borrar y recrear es `foodstore_restore_test`, y sólo desde `restore_test.sh --recrear`.
+- Prohibido escribir contraseñas en scripts, logs o el repo: usar `~/.pgpass` y `-w`. No usar `PGPASSWORD` en línea de comandos.
+- `pg_dump` siempre en formato custom (`-Fc`); `pg_restore` siempre con `--exit-on-error`.
+- No proponer `VACUUM FULL` como tarea periódica.
+- Las tablas reales son `pedido_producto` (no `detalle_pedido`) y `cliente`; verificar nombres contra `schema.sql` antes de generar SQL.
