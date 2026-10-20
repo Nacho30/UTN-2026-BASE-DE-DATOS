@@ -1,0 +1,76 @@
+Null display is "—".
+===== Health check Food Store =====
+   base    |                                                                  motor                                                                   |            momento            
+-----------+------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------
+ foodstore | PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit | 2026-10-20 08:47:22.721129-03
+(1 row)
+
+===== 1. Tamaño =====
+ tamano_base 
+-------------
+ 106 MB
+(1 row)
+
+      tabla      |  total  |   datos    | indices 
+-----------------+---------+------------+---------
+ producto        | 48 MB   | 42 MB      | 6008 kB
+ pedido_producto | 36 MB   | 22 MB      | 15 MB
+ pedido          | 13 MB   | 8832 kB    | 4504 kB
+ cliente         | 1000 kB | 496 kB     | 472 kB
+ categoria       | 40 kB   | 8192 bytes | 32 kB
+(5 rows)
+
+===== 2. Conexiones =====
+ numbackends | xact_commit | xact_rollback | pct_rollback | max_connections | pct_uso_servidor | estado 
+-------------+-------------+---------------+--------------+-----------------+------------------+--------
+           1 |        3194 |             5 |         0.16 |             100 |              6.0 | OK
+(1 row)
+
+   rol    | app  | estado_sesion | sesiones 
+----------+------+---------------+----------
+ postgres | psql | active        |        1
+(1 row)
+
+===== 3. Estado de tablas =====
+      tabla      | vivas  | muertas | pct_muertas | umbral_autovacuum | cambios_sin_analyze |        last_autovacuum        | last_vacuum |       last_autoanalyze        | last_analyze | estado 
+-----------------+--------+---------+-------------+-------------------+---------------------+-------------------------------+-------------+-------------------------------+--------------+--------
+ pedido_producto | 367588 |    7498 |         2.0 |             75051 |                7578 | 2026-10-20 08:39:20.27604-03  | —           | 2026-10-20 08:39:20.361646-03 | —            | OK
+ pedido          | 147044 |    3000 |         2.0 |             30051 |                3040 | 2026-10-20 08:39:19.561764-03 | —           | 2026-10-20 08:39:19.619208-03 | —            | OK
+ producto        |    307 |      12 |         3.8 |               111 |                   0 | 2026-10-20 08:47:19.018964-03 | —           | 2026-10-20 08:47:19.088323-03 | —            | OK
+ categoria       |     15 |       0 |         0.0 |                50 |                  15 | —                             | —           | —                             | —            | OK
+ cliente         |   5003 |       0 |         0.0 |              1051 |                   0 | 2026-10-20 08:39:19.389397-03 | —           | 2026-10-20 08:39:19.401533-03 | —            | OK
+(5 rows)
+
+===== 4. Consultas activas =====
+ pid | rol | state | duracion | edad_transaccion | wait_event_type | consulta | estado 
+-----+-----+-------+----------+------------------+-----------------+----------+--------
+(0 rows)
+
+===== 5. Bloqueos =====
+ bloqueada | bloqueada_por | esperando | consulta 
+-----------+---------------+-----------+----------
+(0 rows)
+
+===== 6. Edad de transacciones =====
+  datname  | edad_xid | freeze_max_age | pct | estado 
+-----------+----------+----------------+-----+--------
+ foodstore |     3640 |      200000000 | 0.0 | OK
+(1 row)
+
+===== 7. Aciertos de caché =====
+  blks_hit  | blks_read | pct_cache | estado 
+------------+-----------+-----------+--------
+ 1234698379 |        10 |    100.00 | OK
+(1 row)
+
+===== Resumen =====
+                  control                  | estado 
+-------------------------------------------+--------
+ 2. conexiones                             | OK
+ 3. tablas sobre el umbral de autovacuum   | OK
+ 4. consultas largas o idle in transaction | OK
+ 5. sesiones bloqueadas                    | OK
+ 6. wraparound                             | OK
+ 7. caché                                  | OK
+(6 rows)
+

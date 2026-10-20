@@ -1,0 +1,59 @@
+Null display is "—".
+===== Mantenimiento Food Store =====
+   base    |            momento            
+-----------+-------------------------------
+ foodstore | 2026-10-20 08:47:56.409428-03
+(1 row)
+
+===== 1. Configuración de autovacuum =====
+                 name                  | setting | unit 
+---------------------------------------+---------+------
+ autovacuum                            | on      | —
+ autovacuum_analyze_scale_factor       | 0.1     | —
+ autovacuum_analyze_threshold          | 50      | —
+ autovacuum_max_workers                | 3       | —
+ autovacuum_naptime                    | 60      | s
+ autovacuum_vacuum_insert_scale_factor | 0.2     | —
+ autovacuum_vacuum_insert_threshold    | 1000    | —
+ autovacuum_vacuum_scale_factor        | 0.2     | —
+ autovacuum_vacuum_threshold           | 50      | —
+ track_counts                          | on      | —
+(10 rows)
+
+----- Tablas con parámetros de autovacuum propios (reloptions) -----
+ tabla | reloptions 
+-------+------------
+(0 rows)
+
+CREATE VIEW
+===== 2. Diagnóstico y decisión por tabla =====
+      tabla      | vivas  | muertas | umbral_vacuum | cambios_sin_analyze | umbral_analyze |         ultimo_vacuum         |        ultimo_analyze         | accion  |                                   motivo                                   
+-----------------+--------+---------+---------------+---------------------+----------------+-------------------------------+-------------------------------+---------+----------------------------------------------------------------------------
+ pedido_producto | 367588 |    7498 |         75051 |                7578 |          37551 | 2026-10-20 08:39:20.27604-03  | 2026-10-20 08:39:20.361646-03 | nada    | autovacuum al día
+ pedido          | 147044 |    3000 |         30051 |                3040 |          15050 | 2026-10-20 08:39:19.561764-03 | 2026-10-20 08:39:19.619208-03 | nada    | autovacuum al día
+ producto        |    307 |      12 |           111 |                   0 |             81 | 2026-10-20 08:47:19.018964-03 | 2026-10-20 08:47:19.088323-03 | nada    | autovacuum al día
+ categoria       |     15 |       0 |            50 |                  15 |             50 | —                             | —                             | ANALYZE | tiene filas y nunca tuvo estadísticas (no llega al umbral del autoanalyze)
+ cliente         |   5003 |       0 |          1051 |                   0 |            550 | 2026-10-20 08:39:19.389397-03 | 2026-10-20 08:39:19.401533-03 | nada    | autovacuum al día
+(5 rows)
+
+===== 3. Acciones ejecutadas =====
+     sentencia     
+-------------------
+ ANALYZE categoria
+(1 row)
+
+Timing is on.
+ANALYZE
+Time: 2.526 ms
+Time: 1.076 ms
+Timing is off.
+===== 4. Estado posterior =====
+      tabla      | vivas  | muertas | cambios_sin_analyze | last_vacuum |         last_analyze          |        last_autovacuum        |       last_autoanalyze        
+-----------------+--------+---------+---------------------+-------------+-------------------------------+-------------------------------+-------------------------------
+ categoria       |     15 |       0 |                   0 | —           | 2026-10-20 08:47:56.422737-03 | —                             | —
+ cliente         |   5003 |       0 |                   0 | —           | —                             | 2026-10-20 08:39:19.389397-03 | 2026-10-20 08:39:19.401533-03
+ pedido          | 147044 |    3000 |                3040 | —           | —                             | 2026-10-20 08:39:19.561764-03 | 2026-10-20 08:39:19.619208-03
+ pedido_producto | 367588 |    7498 |                7578 | —           | —                             | 2026-10-20 08:39:20.27604-03  | 2026-10-20 08:39:20.361646-03
+ producto        |    307 |      12 |                   0 | —           | —                             | 2026-10-20 08:47:19.018964-03 | 2026-10-20 08:47:19.088323-03
+(5 rows)
+
