@@ -1,0 +1,51 @@
+SET
+== a) Todos los pedidos
+ id_pedido |     estado     
+-----------+----------------
+         1 | ENTREGADO
+         2 | ENTREGADO
+         3 | ENTREGADO
+         4 | EN_PREPARACION
+         5 | PENDIENTE
+         6 | ENTREGADO
+(6 rows)
+
+== b) Pedidos ENTREGADO
+ id_pedido |  estado   |         fecha          
+-----------+-----------+------------------------
+         1 | ENTREGADO | 2026-09-20 20:15:00-03
+         2 | ENTREGADO | 2026-09-21 13:02:00-03
+         3 | ENTREGADO | 2026-09-22 21:40:00-03
+         6 | ENTREGADO | 2026-09-25 13:45:00-03
+(4 rows)
+
+ cantidad |    ids     
+----------+------------
+        4 | 1, 2, 3, 6
+(1 row)
+
+== c) Pedidos con el producto 4
+ id_pedido |  estado   | cantidad | precio_unitario 
+-----------+-----------+----------+-----------------
+         1 | ENTREGADO |        2 |         2500.00
+         5 | PENDIENTE |        2 |         2500.00
+(2 rows)
+
+ cantidad | ids  
+----------+------
+        2 | 1, 5
+(1 row)
+
+== d) Ticket promedio y pedidos con total > 16000
+ promedio 
+----------
+ 16183.33
+(1 row)
+
+ id_pedido |  estado   |  total   
+-----------+-----------+----------
+         1 | ENTREGADO | 21000.00
+         5 | PENDIENTE | 27000.00
+         6 | ENTREGADO | 17300.00
+(3 rows)
+

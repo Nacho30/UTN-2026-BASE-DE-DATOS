@@ -1,0 +1,60 @@
+SET
+== Afirmación 1: un pedido completo en PostgreSQL requiere unir 4 tablas
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Nested Loop
+   ->  Nested Loop
+         ->  Index Scan using pedido_pkey on pedido p
+               Index Cond: (id_pedido = 1)
+         ->  Index Scan using cliente_pkey on cliente c
+               Index Cond: (id_cliente = p.id_cliente)
+   ->  Hash Join
+         Hash Cond: (pr.id_producto = pp.id_producto)
+         ->  Seq Scan on producto pr
+         ->  Hash
+               ->  Bitmap Heap Scan on pedido_producto pp
+                     Recheck Cond: (id_pedido = 1)
+                     ->  Bitmap Index Scan on pedido_producto_pkey
+                           Index Cond: (id_pedido = 1)
+(14 rows)
+
+== Precio histórico (R4) vs precio de lista actual
+ id_pedido |       nombre        | precio_historico | precio_lista_actual | difiere 
+-----------+---------------------+------------------+---------------------+---------
+         1 | Hamburguesa clásica |          8000.00 |             8500.00 | t
+         1 | Gaseosa 500 ml      |          2500.00 |             2500.00 | f
+         2 | Pizza muzzarella    |         12000.00 |            12000.00 | f
+         3 | Hamburguesa doble   |         11000.00 |            11000.00 | f
+         3 | Agua mineral 500 ml |          1800.00 |             1800.00 | f
+         4 | Flan casero         |          3500.00 |             3500.00 | f
+         5 | Hamburguesa doble   |         11000.00 |            11000.00 | f
+         5 | Gaseosa 500 ml      |          2500.00 |             2500.00 | f
+         6 | Pizza muzzarella    |         12000.00 |            12000.00 | f
+         6 | Agua mineral 500 ml |          1800.00 |             1800.00 | f
+         6 | Flan casero         |          3500.00 |             3500.00 | f
+(11 rows)
+
+== Si se migrara con producto.precio en vez de precio_unitario
+ id_pedido | total_correcto | total_con_precio_actual 
+-----------+----------------+-------------------------
+         1 |       21000.00 |                22000.00
+(1 row)
+
+== Fechas: día local (-03) vs día UTC (como queda en MongoDB)
+ id_pedido | dia_local  |  dia_utc   
+-----------+------------+------------
+         3 | 2026-09-22 | 2026-09-23
+(1 row)
+
+== RN2 sigue fuera del documento: stock actual tras los pedidos de prueba
+ id_producto |       nombre        | stock 
+-------------+---------------------+-------
+           1 | Hamburguesa clásica |    18
+           2 | Hamburguesa doble   |     7
+           3 | Pizza muzzarella    |     6
+           4 | Gaseosa 500 ml      |    46
+           5 | Agua mineral 500 ml |    38
+           6 | Flan casero         |     2
+           7 | Pizza napolitana    |     0
+(7 rows)
+
