@@ -1,0 +1,135 @@
+== Documentos migrados: 6
+== Pedidos con total inconsistente (esperado: ninguno)
+[]
+== Validador OK, rechazó cantidad 0: Document failed validation
+== Pedido completo _id 1
+{
+  _id: 1,
+  fecha: ISODate('2026-09-20T23:15:00.000Z'),
+  estado: 'ENTREGADO',
+  forma_pago: 'TARJETA',
+  cliente: {
+    id_cliente: 1,
+    nombre: 'Ana',
+    apellido: 'Pérez'
+  },
+  lineas: [
+    {
+      id_producto: 1,
+      nombre: 'Hamburguesa clásica',
+      cantidad: 2,
+      precio_unitario: Decimal128('8000.00')
+    },
+    {
+      id_producto: 4,
+      nombre: 'Gaseosa 500 ml',
+      cantidad: 2,
+      precio_unitario: Decimal128('2500.00')
+    }
+  ],
+  total: Decimal128('21000.00')
+}
+== a) Todos los pedidos
+[
+  {
+    _id: 1,
+    estado: 'ENTREGADO'
+  },
+  {
+    _id: 2,
+    estado: 'ENTREGADO'
+  },
+  {
+    _id: 3,
+    estado: 'ENTREGADO'
+  },
+  {
+    _id: 4,
+    estado: 'EN_PREPARACION'
+  },
+  {
+    _id: 5,
+    estado: 'PENDIENTE'
+  },
+  {
+    _id: 6,
+    estado: 'ENTREGADO'
+  }
+]
+== b) Pedidos ENTREGADO
+[
+  {
+    _id: 1,
+    fecha: ISODate('2026-09-20T23:15:00.000Z'),
+    estado: 'ENTREGADO'
+  },
+  {
+    _id: 2,
+    fecha: ISODate('2026-09-21T16:02:00.000Z'),
+    estado: 'ENTREGADO'
+  },
+  {
+    _id: 3,
+    fecha: ISODate('2026-09-23T00:40:00.000Z'),
+    estado: 'ENTREGADO'
+  },
+  {
+    _id: 6,
+    fecha: ISODate('2026-09-25T16:45:00.000Z'),
+    estado: 'ENTREGADO'
+  }
+]
+   cantidad: 4
+== c) Pedidos con el producto 4 (Gaseosa 500 ml)
+[
+  {
+    _id: 1,
+    estado: 'ENTREGADO',
+    lineas: [
+      {
+        id_producto: 4,
+        nombre: 'Gaseosa 500 ml',
+        cantidad: 2,
+        precio_unitario: Decimal128('2500.00')
+      }
+    ]
+  },
+  {
+    _id: 5,
+    estado: 'PENDIENTE',
+    lineas: [
+      {
+        id_producto: 4,
+        nombre: 'Gaseosa 500 ml',
+        cantidad: 2,
+        precio_unitario: Decimal128('2500.00')
+      }
+    ]
+  }
+]
+   cantidad: 2
+== d) Ticket promedio (justifica el umbral)
+[
+  {
+    _id: null,
+    promedio: Decimal128('16183.33333333333333333333333333333')
+  }
+]
+== d) Pedidos con total > 16000
+[
+  {
+    _id: 1,
+    estado: 'ENTREGADO',
+    total: Decimal128('21000.00')
+  },
+  {
+    _id: 5,
+    estado: 'PENDIENTE',
+    total: Decimal128('27000.00')
+  },
+  {
+    _id: 6,
+    estado: 'ENTREGADO',
+    total: Decimal128('17300.00')
+  }
+]

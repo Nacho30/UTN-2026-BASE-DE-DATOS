@@ -9,7 +9,7 @@ Subconjunto «pedidos y detalle de pedidos» de Food Store migrado de PostgreSQL
 
 | Archivo | Contenido |
 |---|---|
-| [`docs/informe_u7.pdf`](docs/informe_u7.pdf) | Informe (3 páginas): modelo, migración, consultas, tabla de verificación, contraste de IA y conclusión |
+| [`docs/informe_u7.pdf`](docs/informe_u7.pdf) | Informe (4 páginas): modelo, migración, consultas, tabla de verificación, contraste de IA y conclusión |
 | [`consultas_mongodb.js`](consultas_mongodb.js) | Colección con validador `$jsonSchema`, `insertMany()` de 6 pedidos, verificaciones y consultas a–d |
 | [`consultas_postgresql.sql`](consultas_postgresql.sql) | Equivalentes de b) y c) (más a y d) en PostgreSQL |
 | [`sql/01_estado_y_pedidos_prueba.sql`](sql/01_estado_y_pedidos_prueba.sql) | Agrega `pedido.estado` (el esquema real no lo tenía) y los pedidos de prueba 5 y 6 |

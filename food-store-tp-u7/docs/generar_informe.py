@@ -6,6 +6,7 @@ La salida de MongoDB se toma de docs/evidencia/04_salida_mongodb.txt. Mientras e
 archivo no exista, el informe marca la evidencia de MongoDB como pendiente y la
 tabla de verificación muestra los valores esperados.
 """
+import textwrap
 from pathlib import Path
 
 from reportlab.lib import colors
@@ -78,7 +79,32 @@ def extracto(archivo, desde, hasta):
     return "\n".join(l for l in lineas[i:j] if l.strip())
 
 
-mongo_txt = SALIDA_MONGO.read_text(encoding="utf-8").strip() if HAY_MONGO else ""
+def compactar(texto):
+    """Una línea por sección '== ...' y un documento por línea, para que entre en el PDF."""
+    import re
+    secciones, actual = [], None
+    for l in texto.splitlines():
+        if l.startswith("=="):
+            if actual is not None:
+                secciones.append(actual)
+            actual = [l, ""]
+        elif actual is not None:
+            actual[1] += " " + l.strip()
+    if actual is not None:
+        secciones.append(actual)
+    salida = []
+    for cab_, cuerpo in secciones:
+        cuerpo = re.sub(r"\s+", " ", cuerpo).strip()
+        cuerpo = re.sub(r"\{ ", "{", cuerpo).replace(" }", "}").replace("[ ", "[").replace(" ]", "]")
+        cuerpo = re.sub(r"\}, \{(_id)", r"},\n  {\1", cuerpo)
+        cuerpo = re.sub(r"\] cantidad: (\d+)$", r"]\ncantidad: \1", cuerpo)
+        salida.append(cab_)
+        for linea in cuerpo.splitlines() if cuerpo else []:
+            salida.extend(textwrap.wrap(linea.strip(), 116, initial_indent="  ", subsequent_indent="      "))
+    return "\n".join(salida)
+
+
+mongo_txt = compactar(SALIDA_MONGO.read_text(encoding="utf-8").strip()) if HAY_MONGO else ""
 esp = "" if HAY_MONGO else " <i>(esperado)</i>"
 
 h = []
