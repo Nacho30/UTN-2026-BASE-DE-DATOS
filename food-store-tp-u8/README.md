@@ -3,6 +3,9 @@
 Bases de Datos II · Tecnicatura Universitaria en Programación · UTN · 2026
 Alumno: Ignacio Martín Rodríguez
 
+**Repositorio (con el historial de commits):** https://github.com/Nacho30/utn-2026-base-de-datos/tree/tp-unidad-8
+— rama `tp-unidad-8`, carpeta `food-store-tp-u8/`. La Unidad 7 está en la rama `tp-unidad-7`.
+
 El food truck vende en una feria sin señal. La tablet guarda una copia del catálogo en **SQLite** y arma borradores; la sincronización con **PostgreSQL** se simula con un semáforo. **El móvil propone, el servidor dispone:** la tablet nunca escribe en PostgreSQL y `SIMULADO_APROBADO` no es una venta.
 
 ## Qué hay en cada lugar
