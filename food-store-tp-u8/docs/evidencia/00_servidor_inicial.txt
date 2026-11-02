@@ -1,0 +1,37 @@
+
+######## Servidor: plantilla_base y copia_trabajo desde cero
+aplicado schema.sql
+aplicado migraciones/001_restricciones_reglas_negocio.sql
+aplicado migraciones/002_lineas_de_pedido_inmutables.sql
+aplicado programables/funciones_procedimientos.sql
+aplicado datos_iniciales.sql
+DO
+CREATE VIEW
+COMMENT
+ id |       nombre        | precio_centavos | stock | disponible | eliminado |    fecha_snapshot    
+----+---------------------+-----------------+-------+------------+-----------+----------------------
+  1 | Hamburguesa clásica |          850000 |    18 | t          | f         | 2026-11-02T13:50:18Z
+  2 | Hamburguesa doble   |         1100000 |     9 | t          | f         | 2026-11-02T13:50:18Z
+  3 | Pizza muzzarella    |         1200000 |     7 | t          | f         | 2026-11-02T13:50:18Z
+  4 | Gaseosa 500 ml      |          250000 |    48 | t          | f         | 2026-11-02T13:50:18Z
+  5 | Agua mineral 500 ml |          180000 |    39 | t          | f         | 2026-11-02T13:50:18Z
+  6 | Flan casero         |          350000 |     3 | t          | f         | 2026-11-02T13:50:18Z
+  7 | Pizza napolitana    |         1300000 |     0 | f          | t         | 2026-11-02T13:50:18Z
+(7 rows)
+
+ pedidos | lineas | stock_total 
+---------+--------+-------------
+       4 |      6 |         124
+(1 row)
+
+ id_producto |       nombre        |  precio  | stock | activo 
+-------------+---------------------+----------+-------+--------
+           1 | Hamburguesa clásica |  8500.00 |    18 | t
+           2 | Hamburguesa doble   | 11000.00 |     9 | t
+           3 | Pizza muzzarella    | 12000.00 |     7 | t
+           4 | Gaseosa 500 ml      |  2500.00 |    48 | t
+           5 | Agua mineral 500 ml |  1800.00 |    39 | t
+           6 | Flan casero         |  3500.00 |     3 | t
+           7 | Pizza napolitana    | 13000.00 |     0 | f
+(7 rows)
+

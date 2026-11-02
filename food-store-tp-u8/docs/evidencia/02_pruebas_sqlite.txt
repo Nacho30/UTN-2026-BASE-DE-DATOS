@@ -1,0 +1,54 @@
+
+######## Pruebas de la consigna 1.c
+== 1a. Borrador completo (borrador + ítems + solicitud) con BEGIN ... COMMIT
+id_local                              usuario            forma_pago  producto_id  cantidad  precio_centavos_visto  solicitud_uuid                        estado
+------------------------------------  -----------------  ----------  -----------  --------  ---------------------  ------------------------------------  ---------
+b1000000-0000-4000-8000-000000000001  vendedor_feria_01  EFECTIVO    3            1         1200000                51000000-0000-4000-8000-000000000001  PENDIENTE
+b1000000-0000-4000-8000-000000000001  vendedor_feria_01  EFECTIVO    4            2         250000                 51000000-0000-4000-8000-000000000001  PENDIENTE
+== 1b. Otra operación deshecha con ROLLBACK (el vendedor cancela el borrador)
+borradores_antes  items_antes
+----------------  -----------
+1                 2
+borradores_dentro_de_la_tx  items_dentro_de_la_tx
+--------------------------  ---------------------
+2                           3
+borradores_despues  items_despues
+------------------  -------------
+1                   2
+== 2. Caso C1: catálogo disponible, sin conectarse al servidor
+id  nombre               precio    stock_visto  copiado_en
+--  -------------------  --------  -----------  --------------------
+5   Agua mineral 500 ml  1800.00   39           2026-11-02T13:50:18Z
+6   Flan casero          3500.00   3            2026-11-02T13:50:18Z
+4   Gaseosa 500 ml       2500.00   48           2026-11-02T13:50:18Z
+1   Hamburguesa clásica  8500.00   18           2026-11-02T13:50:18Z
+2   Hamburguesa doble    11000.00  9            2026-11-02T13:50:18Z
+3   Pizza muzzarella     12000.00  7            2026-11-02T13:50:18Z
+== 3. Caso C7: cantidad 0 y producto inexistente dan error y no dejan filas
+borradores_antes  items_antes  solicitudes_antes
+----------------  -----------  -----------------
+1                 2            1
+-- 3a. cantidad 0 (CHECK cantidad > 0): se espera error
+Runtime error near line 74: CHECK constraint failed: cantidad > 0
+-- 3b. producto 999 que no existe (FOREIGN KEY): se espera error
+Runtime error near line 82: FOREIGN KEY constraint failed
+-- 3c. lo mismo sin transacción, sobre el borrador ya guardado: se esperan dos errores
+Runtime error near line 87: CHECK constraint failed: cantidad > 0
+Runtime error near line 89: FOREIGN KEY constraint failed
+borradores_despues  items_despues  solicitudes_despues
+------------------  -------------  -------------------
+1                   2              1
+-- 3d. y las otras reglas del esquema: forma de pago y estado fuera de dominio
+Runtime error near line 97: CHECK constraint failed: forma_pago IN ('EFECTIVO', 'TARJETA', 'TRANSFERENCIA')
+Runtime error near line 99: CHECK constraint failed: estado IN ('PENDIENTE', 'CONFLICTO', 'RECHAZADO', 'SIMULADO_APROBADO')
+borradores_finales
+------------------
+1
+
+######## Corrida inicial del semáforo (evalúa el borrador de las pruebas)
+solicitudes_evaluadas_en_esta_corrida
+-------------------------------------
+1
+solicitud  borrador  estado             motivo                            snapshot_de
+---------  --------  -----------------  --------------------------------  --------------------
+51…0001    b1…0001   SIMULADO_APROBADO  todo coincide con la instantánea  2026-11-02T13:50:18Z

@@ -1,0 +1,10 @@
+fk_activas_en_esta_conexion
+---------------------------
+0
+id_local                              producto_id
+------------------------------------  -----------
+b1000000-0000-4000-8000-000000000001  999
+-- con el PRAGMA, el mismo dato aparece como violación:
+table          rowid  parent          fkid
+-------------  -----  --------------  ----
+item_borrador  9      producto_cache  0

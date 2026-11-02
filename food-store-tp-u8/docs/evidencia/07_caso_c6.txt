@@ -1,0 +1,26 @@
+
+######## C6 · reenvío de la misma solicitud
+-- Estado de la solicitud de C5 antes del reenvío:
+solicitud_uuid                        estado             evaluada_en
+------------------------------------  -----------------  --------------------
+55000000-0000-4000-8000-000000000001  SIMULADO_APROBADO  2026-11-02T13:50:19Z
+-- Reenvío con el mismo UUID: se espera error de clave primaria
+Runtime error near line 8: UNIQUE constraint failed: cola_sync.solicitud_uuid
+-- Intento de forzar una reevaluación: se espera error del trigger
+Runtime error near line 11: cola_sync: la solicitud ya fue evaluada y su estado es final
+solicitudes_con_ese_uuid
+------------------------
+1
+
+######## C6 · repetir la simulación no reevalúa
+solicitudes_evaluadas_en_esta_corrida
+-------------------------------------
+0
+solicitud  borrador  estado             motivo                                                                         snapshot_de
+---------  --------  -----------------  -----------------------------------------------------------------------------  --------------------
+51…0001    b1…0001   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z
+52…0001    b2…0002   CONFLICTO          producto 1 (Hamburguesa clásica): precio visto 8500.00, precio actual 9200.00  2026-11-02T13:50:18Z
+52…0002    b2…0002   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z
+53…0001    b3…0003   RECHAZADO          producto 2 (Hamburguesa doble): stock insuficiente, pide 5 y quedan 3          2026-11-02T13:50:18Z
+54…0001    b4…0004   RECHAZADO          producto 5 (Agua mineral 500 ml): dado de baja                                 2026-11-02T13:50:18Z
+55…0001    b5…0005   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z

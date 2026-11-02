@@ -1,0 +1,27 @@
+== L1: dos borradores de 2 flanes cada uno; en la instantánea quedan 3
+stock_flan_en_la_instantanea
+----------------------------
+3
+solicitudes_evaluadas_en_esta_corrida
+-------------------------------------
+2
+solicitud  borrador  estado             motivo                                                                         snapshot_de
+---------  --------  -----------------  -----------------------------------------------------------------------------  --------------------
+51…0001    b1…0001   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z
+52…0001    b2…0002   CONFLICTO          producto 1 (Hamburguesa clásica): precio visto 8500.00, precio actual 9200.00  2026-11-02T13:50:18Z
+52…0002    b2…0002   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z
+53…0001    b3…0003   RECHAZADO          producto 2 (Hamburguesa doble): stock insuficiente, pide 5 y quedan 3          2026-11-02T13:50:18Z
+54…0001    b4…0004   RECHAZADO          producto 5 (Agua mineral 500 ml): dado de baja                                 2026-11-02T13:50:18Z
+55…0001    b5…0005   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z
+5d…0001    bd…0001   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z
+5d…0002    bd…0002   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z
+== L1 en el servidor (base descartable revision, dentro de BEGIN ... ROLLBACK)
+NOTICE:  database "revision" does not exist, skipping
+BEGIN
+ p_id_pedido 
+-------------
+           5
+(1 row)
+
+ERROR:  Stock insuficiente para el producto 6: disponible 1, pedido 2
+ROLLBACK

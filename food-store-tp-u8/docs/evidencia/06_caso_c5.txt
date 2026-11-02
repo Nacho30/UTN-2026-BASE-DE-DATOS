@@ -1,0 +1,31 @@
+
+######## C5 · borrador sin cambios
+producto_id  nombre            cantidad  precio_centavos_visto  stock_visto  estado
+-----------  ----------------  --------  ---------------------  -----------  ---------
+3            Pizza muzzarella  1         1200000                7            PENDIENTE
+6            Flan casero       1         350000                 3            PENDIENTE
+COPY 7
+Instantánea cargada:
+filas_snapshot  fecha_de_la_copia
+--------------  --------------------
+7               2026-11-02T13:50:18Z
+id  nombre               precio_centavos  stock_visto  disponible  eliminado  copiado_en
+--  -------------------  ---------------  -----------  ----------  ---------  --------------------
+1   Hamburguesa clásica  920000           18           1           0          2026-11-02T13:50:18Z
+2   Hamburguesa doble    1100000          3            1           0          2026-11-02T13:50:18Z
+3   Pizza muzzarella     1200000          7            1           0          2026-11-02T13:50:18Z
+4   Gaseosa 500 ml       250000           48           1           0          2026-11-02T13:50:18Z
+5   Agua mineral 500 ml  180000           39           0           1          2026-11-02T13:50:18Z
+6   Flan casero          350000           3            1           0          2026-11-02T13:50:18Z
+7   Pizza napolitana     1300000          0            0           1          2026-11-02T13:50:18Z
+solicitudes_evaluadas_en_esta_corrida
+-------------------------------------
+1
+solicitud  borrador  estado             motivo                                                                         snapshot_de
+---------  --------  -----------------  -----------------------------------------------------------------------------  --------------------
+51…0001    b1…0001   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z
+52…0001    b2…0002   CONFLICTO          producto 1 (Hamburguesa clásica): precio visto 8500.00, precio actual 9200.00  2026-11-02T13:50:18Z
+52…0002    b2…0002   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z
+53…0001    b3…0003   RECHAZADO          producto 2 (Hamburguesa doble): stock insuficiente, pide 5 y quedan 3          2026-11-02T13:50:18Z
+54…0001    b4…0004   RECHAZADO          producto 5 (Agua mineral 500 ml): dado de baja                                 2026-11-02T13:50:18Z
+55…0001    b5…0005   SIMULADO_APROBADO  todo coincide con la instantánea                                               2026-11-02T13:50:18Z

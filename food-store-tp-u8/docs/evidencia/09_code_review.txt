@@ -1,0 +1,86 @@
+NOTICE:  database "revision_antes" does not exist, skipping
+NOTICE:  database "revision_despues" does not exist, skipping
+######## Base: revision_antes
+== H1 (TPI, programables): sp_registrar_pedido con un producto inexistente
+ p_id_pedido 
+-------------
+           5
+(1 row)
+
+ id_pedido | lineas_registradas | lineas_pedidas 
+-----------+--------------------+----------------
+         5 |                  1 |              2
+(1 row)
+
+== H2 (TP2, migración 001): UPDATE de la cantidad de una línea
+ stock_flan_antes 
+------------------
+                3
+(1 row)
+
+ cantidad_en_la_linea | stock_flan_despues 
+----------------------+--------------------
+                   40 |                  3
+(1 row)
+
+== H3 (TP1, schema.sql): ¿hace falta un índice en pedido_producto(id_pedido)?
+                   QUERY PLAN                    
+-------------------------------------------------
+ Bitmap Heap Scan on pedido_producto
+   Recheck Cond: (id_pedido = 3)
+   ->  Bitmap Index Scan on pedido_producto_pkey
+         Index Cond: (id_pedido = 3)
+(4 rows)
+
+                  QUERY PLAN                  
+----------------------------------------------
+ Delete on pedido
+   ->  Index Scan using pedido_pkey on pedido
+         Index Cond: (id_pedido = 3)
+(3 rows)
+
+== H4 (TP2, lab/reset.sql): correrlo sobre una base que NO es copia_trabajo (revision_antes)
+ stock_total_tras_intentar_el_reset | stock_total_de_datos_iniciales 
+------------------------------------+--------------------------------
+                                133 |                            124
+(1 row)
+
+######## Base: revision_despues
+== H1 (TPI, programables): sp_registrar_pedido con un producto inexistente
+ERROR:  El producto 999 no existe: no se registra el pedido
+CONTEXT:  PL/pgSQL function sp_registrar_pedido(bigint,forma_pago,jsonb,bigint) line 27 at RAISE
+ERROR:  current transaction is aborted, commands ignored until end of transaction block
+== H2 (TP2, migración 001): UPDATE de la cantidad de una línea
+ stock_flan_antes 
+------------------
+                3
+(1 row)
+
+ERROR:  Las líneas de pedido no se modifican (pedido 4, producto 6): cancelar el pedido y registrarlo de nuevo
+CONTEXT:  PL/pgSQL function fn_pedido_producto_inmutable() line 3 at RAISE
+ERROR:  current transaction is aborted, commands ignored until end of transaction block
+== H3 (TP1, schema.sql): ¿hace falta un índice en pedido_producto(id_pedido)?
+                   QUERY PLAN                    
+-------------------------------------------------
+ Bitmap Heap Scan on pedido_producto
+   Recheck Cond: (id_pedido = 3)
+   ->  Bitmap Index Scan on pedido_producto_pkey
+         Index Cond: (id_pedido = 3)
+(4 rows)
+
+                  QUERY PLAN                  
+----------------------------------------------
+ Delete on pedido
+   ->  Index Scan using pedido_pkey on pedido
+         Index Cond: (id_pedido = 3)
+(3 rows)
+
+== H4 (TP2, lab/reset.sql): correrlo sobre una base que NO es copia_trabajo (revision_despues)
+psql:lab/reset.sql:10: ERROR:  reset.sql sólo corre sobre copia_trabajo (base actual: revision_despues)
+CONTEXT:  PL/pgSQL function inline_code_block line 3 at RAISE
+ stock_total_tras_intentar_el_reset | stock_total_de_datos_iniciales 
+------------------------------------+--------------------------------
+                                124 |                            124
+(1 row)
+
+NOTICE:  database "revision_002" does not exist, skipping

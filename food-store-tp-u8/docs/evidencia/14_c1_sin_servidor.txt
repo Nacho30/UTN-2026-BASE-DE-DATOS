@@ -1,0 +1,12 @@
+== C1 con PostgreSQL DETENIDO
+16  main    5432 down   postgres /var/lib/postgresql/16/main /var/log/postgresql/postgresql-16-main.log
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory
+-- consulta del catálogo disponible (la misma de pruebas_sqlite.sql) sobre foodstore_movil.db:
+id  nombre               precio    stock_visto  copiado_en
+--  -------------------  --------  -----------  --------------------
+6   Flan casero          3500.00   3            2026-11-02T13:50:18Z
+4   Gaseosa 500 ml       2500.00   48           2026-11-02T13:50:18Z
+1   Hamburguesa clásica  9200.00   18           2026-11-02T13:50:18Z
+2   Hamburguesa doble    11000.00  3            2026-11-02T13:50:18Z
+3   Pizza muzzarella     12000.00  7            2026-11-02T13:50:18Z
+-- PostgreSQL vuelto a iniciar

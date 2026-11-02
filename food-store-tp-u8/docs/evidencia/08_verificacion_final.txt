@@ -1,0 +1,28 @@
+
+######## Verificación final en PostgreSQL
+== Pedidos y líneas: los mismos 4 y 6 de datos_iniciales.sql (la tablet no crea pedidos)
+ pedidos | lineas | ultimo_id_pedido 
+---------+--------+------------------
+       4 |      6 |                4
+(1 row)
+
+== El servidor hoy es idéntico a la última instantánea exportada (antes de C5 y C6)
+   aunque después de exportarla el semáforo dio SIMULADO_APROBADO: nada se descontó
+CREATE TABLE
+COPY 7
+ diferencia | id | nombre | precio_centavos | stock | disponible | eliminado 
+------------+----+--------+-----------------+-------+------------+-----------
+(0 rows)
+
+== Stock y precio actuales (sólo cambiaron los tres datos preparados a mano en C2, C3 y C4)
+ id_producto |       nombre        |  precio  | stock | activo 
+-------------+---------------------+----------+-------+--------
+           1 | Hamburguesa clásica |  9200.00 |    18 | t
+           2 | Hamburguesa doble   | 11000.00 |     3 | t
+           3 | Pizza muzzarella    | 12000.00 |     7 | t
+           4 | Gaseosa 500 ml      |  2500.00 |    48 | t
+           5 | Agua mineral 500 ml |  1800.00 |    39 | f
+           6 | Flan casero         |  3500.00 |     3 | t
+           7 | Pizza napolitana    | 13000.00 |     0 | f
+(7 rows)
+

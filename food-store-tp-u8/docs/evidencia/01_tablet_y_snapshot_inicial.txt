@@ -1,0 +1,24 @@
+
+######## Tablet: base desde cero e instantánea inicial (2.a)
+Tablas creadas:
+name               strict
+-----------------  ------
+cola_sync          1
+item_borrador      1
+pedido_borrador    1
+producto_cache     1
+snapshot_servidor  1
+COPY 7
+Instantánea cargada:
+filas_snapshot  fecha_de_la_copia
+--------------  --------------------
+7               2026-11-02T13:50:18Z
+id  nombre               precio_centavos  stock_visto  disponible  eliminado  copiado_en
+--  -------------------  ---------------  -----------  ----------  ---------  --------------------
+1   Hamburguesa clásica  850000           18           1           0          2026-11-02T13:50:18Z
+2   Hamburguesa doble    1100000          9            1           0          2026-11-02T13:50:18Z
+3   Pizza muzzarella     1200000          7            1           0          2026-11-02T13:50:18Z
+4   Gaseosa 500 ml       250000           48           1           0          2026-11-02T13:50:18Z
+5   Agua mineral 500 ml  180000           39           1           0          2026-11-02T13:50:18Z
+6   Flan casero          350000           3            1           0          2026-11-02T13:50:18Z
+7   Pizza napolitana     1300000          0            0           1          2026-11-02T13:50:18Z

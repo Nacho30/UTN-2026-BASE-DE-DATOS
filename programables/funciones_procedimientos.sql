@@ -113,6 +113,13 @@ BEGIN
             pr.precio
         FROM producto pr
         WHERE pr.id_producto = (v_item->>'id_producto')::BIGINT;
+        -- Corrección TP U8 (code review): un INSERT ... SELECT sin filas
+        -- no es un error, así que un id_producto inexistente se salteaba
+        -- en silencio y el pedido quedaba con menos líneas (o ninguna).
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'El producto % no existe: no se registra el pedido', v_item->>'id_producto'
+                USING ERRCODE = 'foreign_key_violation';
+        END IF;
         -- El trigger RN1/RN2 valida vigencia y stock, y descuenta stock,
         -- en cada uno de estos INSERT. Si algo falla, se propaga y
         -- aborta todo el CALL (incluido el INSERT en pedido de arriba).

@@ -1,0 +1,50 @@
+BEGIN
+-- 002: cambiar la cantidad de una línea (se espera error)
+SAVEPOINT
+psql:pruebas/002_pruebas_lineas_inmutables.sql:8: ERROR:  Las líneas de pedido no se modifican (pedido 4, producto 6): cancelar el pedido y registrarlo de nuevo
+CONTEXT:  PL/pgSQL function fn_pedido_producto_inmutable() line 3 at RAISE
+ROLLBACK
+-- 002: pasar la línea a un producto dado de baja (se espera error)
+SAVEPOINT
+psql:pruebas/002_pruebas_lineas_inmutables.sql:13: ERROR:  Las líneas de pedido no se modifican (pedido 2, producto 3): cancelar el pedido y registrarlo de nuevo
+CONTEXT:  PL/pgSQL function fn_pedido_producto_inmutable() line 3 at RAISE
+ROLLBACK
+-- 002: cancelar un pedido sigue funcionando (DELETE en cascada no se bloquea)
+ stock_flan_antes 
+------------------
+                3
+(1 row)
+
+CALL
+ stock_flan_despues | lineas_pedido_4 
+--------------------+-----------------
+                  5 |               0
+(1 row)
+
+-- sp_registrar_pedido con un producto inexistente (se espera error y ningún pedido nuevo)
+ pedidos_antes 
+---------------
+             3
+(1 row)
+
+SAVEPOINT
+psql:pruebas/002_pruebas_lineas_inmutables.sql:25: ERROR:  El producto 999 no existe: no se registra el pedido
+CONTEXT:  PL/pgSQL function sp_registrar_pedido(bigint,forma_pago,jsonb,bigint) line 27 at RAISE
+ROLLBACK
+ pedidos_despues 
+-----------------
+               3
+(1 row)
+
+-- sp_registrar_pedido con productos válidos sigue funcionando
+ p_id_pedido 
+-------------
+           7
+(1 row)
+
+ id_pedido | lineas 
+-----------+--------
+         7 |      1
+(1 row)
+
+ROLLBACK
